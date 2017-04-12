@@ -2,7 +2,6 @@ package com.belong.url;
 
 import java.io.BufferedReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
