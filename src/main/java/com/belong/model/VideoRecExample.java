@@ -3,14 +3,14 @@ package com.belong.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Video_recExample {
+public class VideoRecExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public Video_recExample() {
+    public VideoRecExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -381,6 +381,76 @@ public class Video_recExample {
 
         public Criteria andActionListNotBetween(String value1, String value2) {
             addCriterion("ACTION_LIST not between", value1, value2, "actionList");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoTypeIsNull() {
+            addCriterion("VIDEO_TYPE is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoTypeIsNotNull() {
+            addCriterion("VIDEO_TYPE is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoTypeEqualTo(String value) {
+            addCriterion("VIDEO_TYPE =", value, "videoType");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoTypeNotEqualTo(String value) {
+            addCriterion("VIDEO_TYPE <>", value, "videoType");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoTypeGreaterThan(String value) {
+            addCriterion("VIDEO_TYPE >", value, "videoType");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoTypeGreaterThanOrEqualTo(String value) {
+            addCriterion("VIDEO_TYPE >=", value, "videoType");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoTypeLessThan(String value) {
+            addCriterion("VIDEO_TYPE <", value, "videoType");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoTypeLessThanOrEqualTo(String value) {
+            addCriterion("VIDEO_TYPE <=", value, "videoType");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoTypeLike(String value) {
+            addCriterion("VIDEO_TYPE like", value, "videoType");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoTypeNotLike(String value) {
+            addCriterion("VIDEO_TYPE not like", value, "videoType");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoTypeIn(List<String> values) {
+            addCriterion("VIDEO_TYPE in", values, "videoType");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoTypeNotIn(List<String> values) {
+            addCriterion("VIDEO_TYPE not in", values, "videoType");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoTypeBetween(String value1, String value2) {
+            addCriterion("VIDEO_TYPE between", value1, value2, "videoType");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoTypeNotBetween(String value1, String value2) {
+            addCriterion("VIDEO_TYPE not between", value1, value2, "videoType");
             return (Criteria) this;
         }
     }

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.belong.dao.Video_recMapper" >
-  <resultMap id="BaseResultMap" type="com.belong.model.Video_rec" >
-    <result column="VIDEO_NAME" property="videoName" jdbcType="VARCHAR" />
-    <result column="VIDEO_PIC" property="videoPic" jdbcType="VARCHAR" />
-    <result column="VIDEO_SRC" property="videoSrc" jdbcType="VARCHAR" />
-    <result column="ACTION_LIST" property="actionList" jdbcType="VARCHAR" />
+<mapper namespace="com.belong.dao.VideoTypeConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.belong.model.VideoTypeConfig" >
+    <result column="VIDEO_NO" property="videoNo" jdbcType="VARCHAR" />
+    <result column="VIDEO_TYPE" property="videoType" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -66,15 +64,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    VIDEO_NAME, VIDEO_PIC, VIDEO_SRC, ACTION_LIST
+    VIDEO_NO, VIDEO_TYPE
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.belong.model.Video_recExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.belong.model.VideoTypeConfigExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from video_rec
+    from video_type_config
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -82,69 +80,49 @@
       order by ${orderByClause}
     </if>
   </select>
-  <delete id="deleteByExample" parameterType="com.belong.model.Video_recExample" >
-    delete from video_rec
+  <delete id="deleteByExample" parameterType="com.belong.model.VideoTypeConfigExample" >
+    delete from video_type_config
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.belong.model.Video_rec" >
-    insert into video_rec (VIDEO_NAME, VIDEO_PIC, VIDEO_SRC, 
-      ACTION_LIST)
-    values (#{videoName,jdbcType=VARCHAR}, #{videoPic,jdbcType=VARCHAR}, #{videoSrc,jdbcType=VARCHAR}, 
-      #{actionList,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="com.belong.model.VideoTypeConfig" >
+    insert into video_type_config (VIDEO_NO, VIDEO_TYPE)
+    values (#{videoNo,jdbcType=VARCHAR}, #{videoType,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.belong.model.Video_rec" >
-    insert into video_rec
+  <insert id="insertSelective" parameterType="com.belong.model.VideoTypeConfig" >
+    insert into video_type_config
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="videoName != null" >
-        VIDEO_NAME,
+      <if test="videoNo != null" >
+        VIDEO_NO,
       </if>
-      <if test="videoPic != null" >
-        VIDEO_PIC,
-      </if>
-      <if test="videoSrc != null" >
-        VIDEO_SRC,
-      </if>
-      <if test="actionList != null" >
-        ACTION_LIST,
+      <if test="videoType != null" >
+        VIDEO_TYPE,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="videoName != null" >
-        #{videoName,jdbcType=VARCHAR},
+      <if test="videoNo != null" >
+        #{videoNo,jdbcType=VARCHAR},
       </if>
-      <if test="videoPic != null" >
-        #{videoPic,jdbcType=VARCHAR},
-      </if>
-      <if test="videoSrc != null" >
-        #{videoSrc,jdbcType=VARCHAR},
-      </if>
-      <if test="actionList != null" >
-        #{actionList,jdbcType=VARCHAR},
+      <if test="videoType != null" >
+        #{videoType,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.belong.model.Video_recExample" resultType="java.lang.Integer" >
-    select count(*) from video_rec
+  <select id="countByExample" parameterType="com.belong.model.VideoTypeConfigExample" resultType="java.lang.Integer" >
+    select count(*) from video_type_config
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update video_rec
+    update video_type_config
     <set >
-      <if test="record.videoName != null" >
-        VIDEO_NAME = #{record.videoName,jdbcType=VARCHAR},
+      <if test="record.videoNo != null" >
+        VIDEO_NO = #{record.videoNo,jdbcType=VARCHAR},
       </if>
-      <if test="record.videoPic != null" >
-        VIDEO_PIC = #{record.videoPic,jdbcType=VARCHAR},
-      </if>
-      <if test="record.videoSrc != null" >
-        VIDEO_SRC = #{record.videoSrc,jdbcType=VARCHAR},
-      </if>
-      <if test="record.actionList != null" >
-        ACTION_LIST = #{record.actionList,jdbcType=VARCHAR},
+      <if test="record.videoType != null" >
+        VIDEO_TYPE = #{record.videoType,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -152,11 +130,9 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update video_rec
-    set VIDEO_NAME = #{record.videoName,jdbcType=VARCHAR},
-      VIDEO_PIC = #{record.videoPic,jdbcType=VARCHAR},
-      VIDEO_SRC = #{record.videoSrc,jdbcType=VARCHAR},
-      ACTION_LIST = #{record.actionList,jdbcType=VARCHAR}
+    update video_type_config
+    set VIDEO_NO = #{record.videoNo,jdbcType=VARCHAR},
+      VIDEO_TYPE = #{record.videoType,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>

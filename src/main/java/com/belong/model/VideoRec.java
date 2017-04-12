@@ -1,6 +1,6 @@
 package com.belong.model;
 
-public class Video_rec {
+public class VideoRec {
     private String videoName;
 
     private String videoPic;
@@ -8,6 +8,8 @@ public class Video_rec {
     private String videoSrc;
 
     private String actionList;
+
+    private String videoType;
 
     public String getVideoName() {
         return videoName;
@@ -39,5 +41,13 @@ public class Video_rec {
 
     public void setActionList(String actionList) {
         this.actionList = actionList == null ? null : actionList.trim();
+    }
+
+    public String getVideoType() {
+        return videoType;
+    }
+
+    public void setVideoType(String videoType) {
+        this.videoType = videoType == null ? null : videoType.trim();
     }
 }
