@@ -14,7 +14,7 @@ public class IpToLocation {
             // 得到资源目录下的资源文件
             URL url = IpToLocation.class.getClassLoader().getResource("dat/GeoLiteCity-2013-01-18.dat");
             LookupService cl = new LookupService(url.getPath(), LookupService.GEOIP_MEMORY_CACHE);
-            Location l2 = cl.getLocation("61.135.169.121");
+            Location l2 = cl.getLocation("104.37.213.4");
             System.out.println(
                     "countryCode: " + l2.countryCode + "\n" +
                             "countryName: " + l2.countryName + "\n" +

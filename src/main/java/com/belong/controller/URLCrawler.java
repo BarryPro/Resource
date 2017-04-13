@@ -1,6 +1,12 @@
-package com.belong.url;
+package com.belong.controller;
 
+import com.belong.service.IVideoTypeConfig;
 import com.belong.setting.Config;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -9,6 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,14 +24,38 @@ import java.util.regex.Pattern;
  * 爬取网上的资源
  * Created by belong on 2017/4/11.
  */
+@Controller
+@RequestMapping(value = "/urlCrawler")
 public class URLCrawler {
+    @Autowired
+    private IVideoTypeConfig service;
 
-    public static void main(String[] args) {
-        getURLContent();
+    private static Logger logger = LoggerFactory.getLogger(URLCrawler.class);
+
+    @RequestMapping(value = "/home")
+    public String home(){
+       return Config.HOME;
     }
 
-    public static void getURLContent() {
-        // 用于访问的网址
+    @RequestMapping(value = "/type")
+    public String addType(HashMap<String,String> map) {
+        logger.info("type--input--DB");
+        map = getURLContent();
+        logger.info("map"+map);
+        Set<String> set = map.keySet();
+        for(String type:set){
+            HashMap<String,String> inParam = new HashMap<>();
+            inParam.put("videoNo",type);
+            inParam.put("videoType",map.get(type));
+            service.addTypeConfig(inParam);
+        }
+        logger.info("成功操作");
+        return Config.SUCCESS;
+    }
+
+    public HashMap<String, String> getURLContent() {
+        // 用于存放类型的键值对儿
+        HashMap<String,String> map = new HashMap<>();
         try {
             InputStream is = URLCrawler.class.getClassLoader().getResourceAsStream(Config.PATH);
             BufferedReader br = new BufferedReader(new InputStreamReader(is,Config.CHARSETNAME));
@@ -32,12 +63,7 @@ public class URLCrawler {
             URL url = null;
             // 用于http的协议连接
             HttpURLConnection urlConnection = null;
-            // 换出字符输入流
-            BufferedReader reader = null;
             ArrayList<String> list = new ArrayList<>();
-            // 用于存放类型的键值对儿
-            HashMap<String,String> map = new HashMap<>();
-
             while ((buffer = br.readLine()) != null) {
                 list.add(buffer.trim());
             }
@@ -64,16 +90,12 @@ public class URLCrawler {
                 }
                 //System.out.println(html);
             } else {
-                System.out.println("请求网页失败!");
+                logger.error("访问网页超时");
             }
-            System.out.println(map);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static void insertType(){
-
+        return map;
     }
 }

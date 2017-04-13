@@ -86,7 +86,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.belong.model.VideoTypeConfig" >
+  <insert id="insert" parameterType="map" >
     insert into video_type_config (VIDEO_NO, VIDEO_TYPE)
     values (#{videoNo,jdbcType=VARCHAR}, #{videoType,jdbcType=VARCHAR})
   </insert>

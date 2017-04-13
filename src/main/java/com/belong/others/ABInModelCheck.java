@@ -1,4 +1,4 @@
-package com.belong.dao;
+package com.belong.others;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -71,7 +71,8 @@ public class ABInModelCheck {
                 int count = 0;
                 while((buffer = br.readLine()) != null){
                     // 定义正则(匹配创建表的的表达式)
-                    String regex = "CREATE(.*)TABLE (.*)\\.(.*)[(|\n]*";
+                    String regex = "CREATE(.*)TABLE (.*)\\.(.*)[(|\n|  (| (]*";
+                    String str = "create table DBACCADM.MK_NETBINDING_INFO  (";
                     Pattern pattern = Pattern.compile(regex);
                     Matcher matcher = pattern.matcher(buffer.toUpperCase());
                     if(matcher.find()){

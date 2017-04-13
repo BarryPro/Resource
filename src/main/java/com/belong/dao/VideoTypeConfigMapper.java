@@ -2,15 +2,17 @@ package com.belong.dao;
 
 import com.belong.model.VideoTypeConfig;
 import com.belong.model.VideoTypeConfigExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 public interface VideoTypeConfigMapper {
     int countByExample(VideoTypeConfigExample example);
 
     int deleteByExample(VideoTypeConfigExample example);
 
-    int insert(VideoTypeConfig record);
+    int insert(Map map);
 
     int insertSelective(VideoTypeConfig record);
 
