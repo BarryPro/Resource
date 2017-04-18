@@ -25,20 +25,20 @@
     <listener>
         <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
     </listener>
+
+    <!-- 加载Spring和MyBatis的配置文件（如果有其他的配置文件也在这里进行加载）-->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath:config/spring-cfg.xml,
+            classpath:config/spring-mybatis-cfg.xml
+        </param-value>
+    </context-param>
     <!-- 用于监听加载配置文件一定要放在其他的监听器的后面-->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
-
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>
-            classpath:config/spring-cfg.xml,
-            classpath:config/spring-mybatis-cfg.xml,
-            classpath:config/spring-mvc-cfg.xml
-        </param-value>
-    </context-param>
     <!-- 过滤器对所有的字符编码都设置成utf-8-->
     <filter>
         <filter-name>CharacterEncodingFilter</filter-name>
@@ -73,5 +73,11 @@
         <servlet-name>SpringMVC</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+
+    <!-- 定义错误页-->
+    <error-page>
+        <location>/urlCrawler/error</location>
+    </error-page>
+
 
 </web-app>

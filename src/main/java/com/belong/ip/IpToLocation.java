@@ -5,16 +5,22 @@ import com.maxmind.geoip.LookupService;
 
 import java.net.URL;
 
+
 /**
- * Created by belong on 2017/4/11.
+ * The type Ip to location.
  */
 public class IpToLocation {
-    public static void main(String[] args) {
+    /**
+     * Gets ip to location.
+     *
+     * @param ip :221.207.241.94
+     */
+    public static void getIpToLocation(String ip) {
         try {
             // 得到资源目录下的资源文件
             URL url = IpToLocation.class.getClassLoader().getResource("dat/GeoLiteCity-2013-01-18.dat");
             LookupService cl = new LookupService(url.getPath(), LookupService.GEOIP_MEMORY_CACHE);
-            Location l2 = cl.getLocation("104.37.213.4");
+            Location l2 = cl.getLocation(ip);
             System.out.println(
                     "countryCode: " + l2.countryCode + "\n" +
                             "countryName: " + l2.countryName + "\n" +
@@ -25,5 +31,9 @@ public class IpToLocation {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        getIpToLocation("221.212.59.108");
     }
 }

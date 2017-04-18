@@ -14,6 +14,8 @@ public interface VideoTypeConfigMapper {
 
     int insert(Map map);
 
+    List<String> selectAll();
+
     int insertSelective(VideoTypeConfig record);
 
     List<VideoTypeConfig> selectByExample(VideoTypeConfigExample example);

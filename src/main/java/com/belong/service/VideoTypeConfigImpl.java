@@ -4,6 +4,7 @@ import com.belong.dao.VideoTypeConfigMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,5 +18,10 @@ public class VideoTypeConfigImpl implements IVideoTypeConfig {
     @Override
     public int addTypeConfig(Map map) {
         return dao.insert(map);
+    }
+
+    @Override
+    public List getVideoNO() {
+        return dao.selectAll();
     }
 }
