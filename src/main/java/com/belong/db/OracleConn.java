@@ -17,7 +17,7 @@ public class OracleConn {
     private static DataSource ds;
     private static Properties pro;
     static {
-        is = OracleConn.class.getClassLoader().getResourceAsStream("db/dbcp_location.ini");
+        is = OracleConn.class.getClassLoader().getResourceAsStream("db/dbcp.ini");
         pro = new Properties();
         try {
             pro.load(is);
