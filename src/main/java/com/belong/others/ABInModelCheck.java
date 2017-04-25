@@ -24,26 +24,26 @@ public class ABInModelCheck {
     public static HashMap<String,Integer> username = new HashMap<>();
     public static void main(String[] args) {
         HashMap<String, Object> map = ModelTableNum();
-        System.out.println("========================================================");
+        //System.out.println("========================================================");
         HashSet<String> set = (HashSet<String>) map.get("set");
         ArrayList<String> list = (ArrayList<String>) map.get("list");
-        System.out.println("========================================================");
+        //System.out.println("========================================================");
         Collections.sort(list);
-        System.out.println("set[不重复的模型]："+set.size());
-        System.out.println("list[可能重复的模型]："+list.size());
-        System.out.println("模型中一共有"+set.size()+"个表");
-        System.out.println("检测数据库中的表是否在模型中");
+        //System.out.println("set[不重复的模型]："+set.size());
+        //System.out.println("list[可能重复的模型]："+list.size());
+        //System.out.println("模型中一共有"+set.size()+"个表");
+        //System.out.println("检测数据库中的表是否在模型中");
         URL url = ABInModelCheck.class.getClassLoader().getResource("txt/db.txt");
         HashSet<String> set_tmp = dbAndModelCmp(url.getPath(),set);
-        System.out.println("检查模型中有而数据库中没有的表");
-        System.out.println("========================================================");
+        //System.out.println("检查模型中有而数据库中没有的表");
+        //System.out.println("========================================================");
         for(String i:list){
             if(!set_tmp.contains(i.trim())){
-                System.out.println(i);
+                //System.out.println(i);
             }
         }
-        System.out.println("========================================================");
-        System.out.println("模型中的属组名包括："+username);
+        //System.out.println("========================================================");
+        //System.out.println("模型中的属组名包括："+username);
 
 
     }
@@ -60,43 +60,75 @@ public class ABInModelCheck {
         HashSet<String> set = new HashSet<>();
         ArrayList<String> list = new ArrayList<>();
         HashMap<String,Object> map = new HashMap<>();
+        int sum = 0;
         for(File i: files){
             String file_path = root+File.separator+i.getName().toString();
             File tmp_file = new File(file_path);
-            System.out.println(tmp_file.getName()+"=================begin");
+            //System.out.println(tmp_file.getName()+"=================begin");
             try {
-                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(tmp_file)));
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(tmp_file),"GBK"));
                 String buffer = null;
                 // 循环遍历tmp下的*.sql文件内容
                 int count = 0;
-                while((buffer = br.readLine()) != null){
-                    // 定义正则(匹配创建表的的表达式)
-                    String regex = "CREATE(.*)TABLE (.*)\\.(.*)[(|\n|  (| (]*";
-                    String str = "create table DBACCADM.MK_NETBINDING_INFO  (";
-                    Pattern pattern = Pattern.compile(regex);
-                    Matcher matcher = pattern.matcher(buffer.toUpperCase());
-                    if(matcher.find()){
-                        count++;
-                        String user = matcher.group(2);
-                        if(username.containsKey(user)){
-                            int num = username.get(user);
-                            num++;
-                            username.put(user,num);
-                        } else {
-                            username.put(user,1);
+                StringBuffer stringBuffer = new StringBuffer();
+                String context = "";
+                // 默认是开发匹配的
+                boolean flag = true;
+                while((context = br.readLine())!=null){
+                    String doc_regex_beg = "/\\*\\*(.*)";
+                    String doc_regex_end = "(.*)\\*\\*/";
+                    Pattern doc_pattern_beg = Pattern.compile(doc_regex_beg,Pattern.DOTALL);
+                    Matcher doc_matter_beg = doc_pattern_beg.matcher(context);
+                    Pattern doc_pattern_end = Pattern.compile(doc_regex_end,Pattern.DOTALL);
+                    Matcher doc_matter_end = doc_pattern_end.matcher(context);
+                    // 注释开头就关闭
+                    if(doc_matter_beg.find()){
+                        flag = false;
+                    }
+                    // 注释结束就打开
+                    if(doc_matter_end.find()){
+                        flag = true;
+                    }
+                    //System.out.println(flag);
+                    if(flag){
+                        String regex = "CREATE(.*)TABLE(.*)\\.(.*)";
+                        Pattern pattern = Pattern.compile(regex,Pattern.CASE_INSENSITIVE);
+                        Matcher matcher = pattern.matcher(context);
+                        if(matcher.find()){
+                            set.add(matcher.group(3));
+                            count++;
                         }
-                        String tmp_str = matcher.group(3);
-                        //System.out.println(tmp_str);
-                        set.add(tmp_str.trim());
-                        list.add(tmp_str.trim());
                     }
                 }
-                System.out.println(i.getName()+"的表数量是"+count);
+                // 负责计数
+                sum += count;
+                //String regex = "CREATE(.*)TABLE (.*)\\.(.*)[(|\n|  (| (]*";
+                //Pattern pattern = Pattern.compile(regex);
+                //Matcher matcher = pattern.matcher(buffer.toUpperCase());
+                //
+                //if(matcher.find()){
+                //    count++;
+                //    String user = matcher.group(2);
+                //    if(username.containsKey(user)){
+                //        int num = username.get(user);
+                //        num++;
+                //        username.put(user,num);
+                //    } else {
+                //        username.put(user,1);
+                //    }
+                //    String tmp_str = matcher.group(3);
+                //    //System.out.println(tmp_str);
+                //    set.add(tmp_str.trim());
+                //    list.add(tmp_str.trim());
+                //}
+                //System.out.println(i.getName()+"的表数量是"+count);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            System.out.println(tmp_file.getName()+"=================end");
+            //System.out.println(tmp_file.getName()+"=================end");
         }
+        System.out.println(set.size());
+        System.out.println(set);
         map.put("set",set);
         map.put("list",list);
         return map;
@@ -120,17 +152,17 @@ public class ABInModelCheck {
                 set_tmp.add(buffer.trim());
             }
             int count = 0;
-            System.out.println("========================================================");
-            System.out.println("DB库中有但是模型中没有的表是：");
+            //System.out.println("========================================================");
+            //System.out.println("DB库中有但是模型中没有的表是：");
             for (String i:list){
                 if(!set.contains(i)){
                     count++;
-                    System.out.println(i);
+                    //System.out.println(i);
                 }
             }
-            System.out.println("========================================================");
-            System.out.println("一共有"+count+"个表不存在");
-            System.out.println("========================================================");
+            //System.out.println("========================================================");
+            //System.out.println("一共有"+count+"个表不存在");
+            //System.out.println("========================================================");
         } catch (Exception e) {
             e.printStackTrace();
         }
