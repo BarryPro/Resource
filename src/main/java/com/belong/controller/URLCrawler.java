@@ -119,7 +119,7 @@ public class URLCrawler {
                     html.append(buffer+Config.ENTER);
                 }
                 // 开始提取网页中的想要的信息
-                String regex = "<li><a href=\"/frim/index(.*).html\">(.*)</a></li>\n";
+                String regex = "<li><a href=\"(.*).html\">(.*)</a></li>\n";
                 Pattern pattern = Pattern.compile(regex);
                 Matcher matcher = pattern.matcher(html);
                 while (matcher.find()) {

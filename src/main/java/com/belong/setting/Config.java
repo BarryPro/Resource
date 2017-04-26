@@ -11,7 +11,7 @@ public class Config {
     public static final String HOME ="custom/home.ftl";
     public static final String MSG ="msg";
     public static final String NUL ="";
-    public static final String SUBPATH ="frim/index/";
+    public static final String SUBPATH ="frim/index";
     public static final String HTML = ".html";
     public static final String ERROR ="custom/error.ftl";
 }
