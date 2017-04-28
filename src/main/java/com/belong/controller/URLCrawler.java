@@ -58,12 +58,32 @@ public class URLCrawler {
         return Config.ERROR;
     }
 
+    /**
+     * <p>用于给video_type_config插入url数据</p>
+     * @param response
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/type")
     public String getSubUrls(HttpServletResponse response, HttpServletRequest request) {
         URLCrawler crawler = new URLCrawler();
         String html = crawler.getDecodeHtml();
         logger.info("type=service:"+service);
         crawler.getHrefAndType(html,service);
+        return Config.HOME;
+    }
+
+    /**
+     * <p>用于查询所有的可访问的超链然后进行访问</p>
+     * @return
+     */
+    @RequestMapping(value = "/subUrls")
+    public String cyclicConnUrls(){
+        // 用于装入可访问的链表
+        List<String> list = service.getVideoNO();
+        logger.info("可访问的网址是：["+list.size()+"]"+list);
+        // 进行访问查询出来的地址
+
         return Config.HOME;
     }
 
@@ -115,7 +135,12 @@ public class URLCrawler {
         return html;
     }
 
-    public void getHrefAndType(String html,IVideoTypeConfig service) {
+    /**
+     * 得到html页中的超链和超链所指向的内容
+     * @param html html的全部内容
+     * @param service 用于调用服务的句柄
+     */
+    private void getHrefAndType(String html,IVideoTypeConfig service) {
         logger.info("开始解析html内容");
         Document document = Jsoup.parse(html);
         // 得到多有的超链信息
@@ -157,7 +182,7 @@ public class URLCrawler {
      *
      * @return 返回字符集
      */
-    public String getCharset(String html) {
+    private String getCharset(String html) {
         // 解析成dom
         Document document = Jsoup.parse(html);
         Elements elements = document.getElementsByTag("meta");
