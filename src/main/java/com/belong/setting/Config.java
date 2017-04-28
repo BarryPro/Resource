@@ -5,8 +5,7 @@ package com.belong.setting;
  */
 public class Config {
     public static final String PATH = "txt/url.txt";
-    public static final String CHARSETNAME = "utf-8";
-    public static final String DEFAULTCHARSETNAME ="gb2312";
+    public static final String DEFAULTCHARSET = "utf-8";
     public static final String ENTER ="\n";
     public static final String HOME ="custom/home.ftl";
     public static final String MSG ="msg";
