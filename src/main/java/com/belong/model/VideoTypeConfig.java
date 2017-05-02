@@ -1,9 +1,13 @@
 package com.belong.model;
 
+import java.util.Date;
+
 public class VideoTypeConfig {
     private String videoNo;
 
     private String videoType;
+
+    private Date opTime;
 
     public String getVideoNo() {
         return videoNo;
@@ -19,5 +23,13 @@ public class VideoTypeConfig {
 
     public void setVideoType(String videoType) {
         this.videoType = videoType == null ? null : videoType.trim();
+    }
+
+    public Date getOpTime() {
+        return opTime;
+    }
+
+    public void setOpTime(Date opTime) {
+        this.opTime = opTime;
     }
 }

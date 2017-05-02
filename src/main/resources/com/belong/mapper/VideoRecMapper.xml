@@ -1,175 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.belong.dao.VideoRecMapper" >
-  <resultMap id="BaseResultMap" type="com.belong.model.VideoRec" >
-    <result column="VIDEO_NAME" property="videoName" jdbcType="VARCHAR" />
-    <result column="VIDEO_PIC" property="videoPic" jdbcType="VARCHAR" />
-    <result column="VIDEO_SRC" property="videoSrc" jdbcType="VARCHAR" />
-    <result column="ACTION_LIST" property="actionList" jdbcType="VARCHAR" />
-    <result column="VIDEO_TYPE" property="videoType" jdbcType="VARCHAR" />
-  </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Base_Column_List" >
-    VIDEO_NAME, VIDEO_PIC, VIDEO_SRC, ACTION_LIST, VIDEO_TYPE
-  </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.belong.model.VideoRecExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from video_rec
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
-  <delete id="deleteByExample" parameterType="com.belong.model.VideoRecExample" >
-    delete from video_rec
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="com.belong.model.VideoRec" >
-    insert into video_rec (VIDEO_NAME, VIDEO_PIC, VIDEO_SRC, 
-      ACTION_LIST, VIDEO_TYPE)
-    values (#{videoName,jdbcType=VARCHAR}, #{videoPic,jdbcType=VARCHAR}, #{videoSrc,jdbcType=VARCHAR}, 
-      #{actionList,jdbcType=VARCHAR}, #{videoType,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="com.belong.model.VideoRec" >
-    insert into video_rec
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="videoName != null" >
-        VIDEO_NAME,
-      </if>
-      <if test="videoPic != null" >
-        VIDEO_PIC,
-      </if>
-      <if test="videoSrc != null" >
-        VIDEO_SRC,
-      </if>
-      <if test="actionList != null" >
-        ACTION_LIST,
-      </if>
-      <if test="videoType != null" >
-        VIDEO_TYPE,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="videoName != null" >
-        #{videoName,jdbcType=VARCHAR},
-      </if>
-      <if test="videoPic != null" >
-        #{videoPic,jdbcType=VARCHAR},
-      </if>
-      <if test="videoSrc != null" >
-        #{videoSrc,jdbcType=VARCHAR},
-      </if>
-      <if test="actionList != null" >
-        #{actionList,jdbcType=VARCHAR},
-      </if>
-      <if test="videoType != null" >
-        #{videoType,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="com.belong.model.VideoRecExample" resultType="java.lang.Integer" >
-    select count(*) from video_rec
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map" >
-    update video_rec
-    <set >
-      <if test="record.videoName != null" >
-        VIDEO_NAME = #{record.videoName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.videoPic != null" >
-        VIDEO_PIC = #{record.videoPic,jdbcType=VARCHAR},
-      </if>
-      <if test="record.videoSrc != null" >
-        VIDEO_SRC = #{record.videoSrc,jdbcType=VARCHAR},
-      </if>
-      <if test="record.actionList != null" >
-        ACTION_LIST = #{record.actionList,jdbcType=VARCHAR},
-      </if>
-      <if test="record.videoType != null" >
-        VIDEO_TYPE = #{record.videoType,jdbcType=VARCHAR},
-      </if>
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update video_rec
-    set VIDEO_NAME = #{record.videoName,jdbcType=VARCHAR},
-      VIDEO_PIC = #{record.videoPic,jdbcType=VARCHAR},
-      VIDEO_SRC = #{record.videoSrc,jdbcType=VARCHAR},
-      ACTION_LIST = #{record.actionList,jdbcType=VARCHAR},
-      VIDEO_TYPE = #{record.videoType,jdbcType=VARCHAR}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
+<mapper namespace="com.belong.dao.VideoRecMapper">
+    <resultMap id="BaseResultMap" type="com.belong.model.VideoRec">
+        <id column="VIDEO_SRC" property="videoSrc" jdbcType="VARCHAR"/>
+        <result column="VIDEO_NAME" property="videoName" jdbcType="VARCHAR"/>
+        <result column="VIDEO_PIC" property="videoPic" jdbcType="VARCHAR"/>
+        <result column="VIDEO_TYPE" property="videoType" jdbcType="VARCHAR"/>
+        <result column="TYPE_NO" property="typeNo" jdbcType="VARCHAR"/>
+        <result column="OP_TIME" property="opTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <insert id="addRec" parameterType="map">
+      insert into video_rec (VIDEO_SRC, VIDEO_NAME, VIDEO_PIC, VIDEO_TYPE, OP_TIME)
+      values (#{videoSrc,jdbcType=VARCHAR}, #{videoName,jdbcType=VARCHAR},
+      #{videoPic,jdbcType=VARCHAR}, #{videoType,jdbcType=VARCHAR},now())
+    </insert>
+
 </mapper>

@@ -5,8 +5,8 @@ import java.util.Map;
 /**
  * @Description: <p></p>
  * @Author: belong.
- * @Date: 2017/4/25.
+ * @Date: 2017/4/29.
  */
-public interface IUrlsConfig {
-    int addUrls(Map map);
+public interface IVideoRec {
+    int addRec(Map map);
 }

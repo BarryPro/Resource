@@ -1,6 +1,7 @@
 package com.belong.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class VideoRecExample {
@@ -102,6 +103,76 @@ public class VideoRecExample {
                 throw new RuntimeException("Between values for " + property + " cannot be null");
             }
             criteria.add(new Criterion(condition, value1, value2));
+        }
+
+        public Criteria andVideoSrcIsNull() {
+            addCriterion("VIDEO_SRC is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoSrcIsNotNull() {
+            addCriterion("VIDEO_SRC is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoSrcEqualTo(String value) {
+            addCriterion("VIDEO_SRC =", value, "videoSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoSrcNotEqualTo(String value) {
+            addCriterion("VIDEO_SRC <>", value, "videoSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoSrcGreaterThan(String value) {
+            addCriterion("VIDEO_SRC >", value, "videoSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoSrcGreaterThanOrEqualTo(String value) {
+            addCriterion("VIDEO_SRC >=", value, "videoSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoSrcLessThan(String value) {
+            addCriterion("VIDEO_SRC <", value, "videoSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoSrcLessThanOrEqualTo(String value) {
+            addCriterion("VIDEO_SRC <=", value, "videoSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoSrcLike(String value) {
+            addCriterion("VIDEO_SRC like", value, "videoSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoSrcNotLike(String value) {
+            addCriterion("VIDEO_SRC not like", value, "videoSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoSrcIn(List<String> values) {
+            addCriterion("VIDEO_SRC in", values, "videoSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoSrcNotIn(List<String> values) {
+            addCriterion("VIDEO_SRC not in", values, "videoSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoSrcBetween(String value1, String value2) {
+            addCriterion("VIDEO_SRC between", value1, value2, "videoSrc");
+            return (Criteria) this;
+        }
+
+        public Criteria andVideoSrcNotBetween(String value1, String value2) {
+            addCriterion("VIDEO_SRC not between", value1, value2, "videoSrc");
+            return (Criteria) this;
         }
 
         public Criteria andVideoNameIsNull() {
@@ -244,146 +315,6 @@ public class VideoRecExample {
             return (Criteria) this;
         }
 
-        public Criteria andVideoSrcIsNull() {
-            addCriterion("VIDEO_SRC is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andVideoSrcIsNotNull() {
-            addCriterion("VIDEO_SRC is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andVideoSrcEqualTo(String value) {
-            addCriterion("VIDEO_SRC =", value, "videoSrc");
-            return (Criteria) this;
-        }
-
-        public Criteria andVideoSrcNotEqualTo(String value) {
-            addCriterion("VIDEO_SRC <>", value, "videoSrc");
-            return (Criteria) this;
-        }
-
-        public Criteria andVideoSrcGreaterThan(String value) {
-            addCriterion("VIDEO_SRC >", value, "videoSrc");
-            return (Criteria) this;
-        }
-
-        public Criteria andVideoSrcGreaterThanOrEqualTo(String value) {
-            addCriterion("VIDEO_SRC >=", value, "videoSrc");
-            return (Criteria) this;
-        }
-
-        public Criteria andVideoSrcLessThan(String value) {
-            addCriterion("VIDEO_SRC <", value, "videoSrc");
-            return (Criteria) this;
-        }
-
-        public Criteria andVideoSrcLessThanOrEqualTo(String value) {
-            addCriterion("VIDEO_SRC <=", value, "videoSrc");
-            return (Criteria) this;
-        }
-
-        public Criteria andVideoSrcLike(String value) {
-            addCriterion("VIDEO_SRC like", value, "videoSrc");
-            return (Criteria) this;
-        }
-
-        public Criteria andVideoSrcNotLike(String value) {
-            addCriterion("VIDEO_SRC not like", value, "videoSrc");
-            return (Criteria) this;
-        }
-
-        public Criteria andVideoSrcIn(List<String> values) {
-            addCriterion("VIDEO_SRC in", values, "videoSrc");
-            return (Criteria) this;
-        }
-
-        public Criteria andVideoSrcNotIn(List<String> values) {
-            addCriterion("VIDEO_SRC not in", values, "videoSrc");
-            return (Criteria) this;
-        }
-
-        public Criteria andVideoSrcBetween(String value1, String value2) {
-            addCriterion("VIDEO_SRC between", value1, value2, "videoSrc");
-            return (Criteria) this;
-        }
-
-        public Criteria andVideoSrcNotBetween(String value1, String value2) {
-            addCriterion("VIDEO_SRC not between", value1, value2, "videoSrc");
-            return (Criteria) this;
-        }
-
-        public Criteria andActionListIsNull() {
-            addCriterion("ACTION_LIST is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andActionListIsNotNull() {
-            addCriterion("ACTION_LIST is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andActionListEqualTo(String value) {
-            addCriterion("ACTION_LIST =", value, "actionList");
-            return (Criteria) this;
-        }
-
-        public Criteria andActionListNotEqualTo(String value) {
-            addCriterion("ACTION_LIST <>", value, "actionList");
-            return (Criteria) this;
-        }
-
-        public Criteria andActionListGreaterThan(String value) {
-            addCriterion("ACTION_LIST >", value, "actionList");
-            return (Criteria) this;
-        }
-
-        public Criteria andActionListGreaterThanOrEqualTo(String value) {
-            addCriterion("ACTION_LIST >=", value, "actionList");
-            return (Criteria) this;
-        }
-
-        public Criteria andActionListLessThan(String value) {
-            addCriterion("ACTION_LIST <", value, "actionList");
-            return (Criteria) this;
-        }
-
-        public Criteria andActionListLessThanOrEqualTo(String value) {
-            addCriterion("ACTION_LIST <=", value, "actionList");
-            return (Criteria) this;
-        }
-
-        public Criteria andActionListLike(String value) {
-            addCriterion("ACTION_LIST like", value, "actionList");
-            return (Criteria) this;
-        }
-
-        public Criteria andActionListNotLike(String value) {
-            addCriterion("ACTION_LIST not like", value, "actionList");
-            return (Criteria) this;
-        }
-
-        public Criteria andActionListIn(List<String> values) {
-            addCriterion("ACTION_LIST in", values, "actionList");
-            return (Criteria) this;
-        }
-
-        public Criteria andActionListNotIn(List<String> values) {
-            addCriterion("ACTION_LIST not in", values, "actionList");
-            return (Criteria) this;
-        }
-
-        public Criteria andActionListBetween(String value1, String value2) {
-            addCriterion("ACTION_LIST between", value1, value2, "actionList");
-            return (Criteria) this;
-        }
-
-        public Criteria andActionListNotBetween(String value1, String value2) {
-            addCriterion("ACTION_LIST not between", value1, value2, "actionList");
-            return (Criteria) this;
-        }
-
         public Criteria andVideoTypeIsNull() {
             addCriterion("VIDEO_TYPE is null");
             return (Criteria) this;
@@ -451,6 +382,136 @@ public class VideoRecExample {
 
         public Criteria andVideoTypeNotBetween(String value1, String value2) {
             addCriterion("VIDEO_TYPE not between", value1, value2, "videoType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNoIsNull() {
+            addCriterion("TYPE_NO is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNoIsNotNull() {
+            addCriterion("TYPE_NO is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNoEqualTo(String value) {
+            addCriterion("TYPE_NO =", value, "typeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNoNotEqualTo(String value) {
+            addCriterion("TYPE_NO <>", value, "typeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNoGreaterThan(String value) {
+            addCriterion("TYPE_NO >", value, "typeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNoGreaterThanOrEqualTo(String value) {
+            addCriterion("TYPE_NO >=", value, "typeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNoLessThan(String value) {
+            addCriterion("TYPE_NO <", value, "typeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNoLessThanOrEqualTo(String value) {
+            addCriterion("TYPE_NO <=", value, "typeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNoLike(String value) {
+            addCriterion("TYPE_NO like", value, "typeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNoNotLike(String value) {
+            addCriterion("TYPE_NO not like", value, "typeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNoIn(List<String> values) {
+            addCriterion("TYPE_NO in", values, "typeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNoNotIn(List<String> values) {
+            addCriterion("TYPE_NO not in", values, "typeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNoBetween(String value1, String value2) {
+            addCriterion("TYPE_NO between", value1, value2, "typeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNoNotBetween(String value1, String value2) {
+            addCriterion("TYPE_NO not between", value1, value2, "typeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeIsNull() {
+            addCriterion("OP_TIME is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeIsNotNull() {
+            addCriterion("OP_TIME is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeEqualTo(Date value) {
+            addCriterion("OP_TIME =", value, "opTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeNotEqualTo(Date value) {
+            addCriterion("OP_TIME <>", value, "opTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeGreaterThan(Date value) {
+            addCriterion("OP_TIME >", value, "opTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("OP_TIME >=", value, "opTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeLessThan(Date value) {
+            addCriterion("OP_TIME <", value, "opTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeLessThanOrEqualTo(Date value) {
+            addCriterion("OP_TIME <=", value, "opTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeIn(List<Date> values) {
+            addCriterion("OP_TIME in", values, "opTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeNotIn(List<Date> values) {
+            addCriterion("OP_TIME not in", values, "opTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeBetween(Date value1, Date value2) {
+            addCriterion("OP_TIME between", value1, value2, "opTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeNotBetween(Date value1, Date value2) {
+            addCriterion("OP_TIME not between", value1, value2, "opTime");
             return (Criteria) this;
         }
     }

@@ -8,5 +8,5 @@ import java.util.Map;
  */
 public interface IVideoTypeConfig {
     int addTypeConfig(Map map);
-    List getVideoNO();
+    List getVideoCate();
 }

@@ -1,6 +1,7 @@
 package com.belong.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class VideoTypeConfigExample {
@@ -105,142 +106,202 @@ public class VideoTypeConfigExample {
         }
 
         public Criteria andVideoNoIsNull() {
-            addCriterion("VIDEO_NO is null");
+            addCriterion("video_no is null");
             return (Criteria) this;
         }
 
         public Criteria andVideoNoIsNotNull() {
-            addCriterion("VIDEO_NO is not null");
+            addCriterion("video_no is not null");
             return (Criteria) this;
         }
 
         public Criteria andVideoNoEqualTo(String value) {
-            addCriterion("VIDEO_NO =", value, "videoNo");
+            addCriterion("video_no =", value, "videoNo");
             return (Criteria) this;
         }
 
         public Criteria andVideoNoNotEqualTo(String value) {
-            addCriterion("VIDEO_NO <>", value, "videoNo");
+            addCriterion("video_no <>", value, "videoNo");
             return (Criteria) this;
         }
 
         public Criteria andVideoNoGreaterThan(String value) {
-            addCriterion("VIDEO_NO >", value, "videoNo");
+            addCriterion("video_no >", value, "videoNo");
             return (Criteria) this;
         }
 
         public Criteria andVideoNoGreaterThanOrEqualTo(String value) {
-            addCriterion("VIDEO_NO >=", value, "videoNo");
+            addCriterion("video_no >=", value, "videoNo");
             return (Criteria) this;
         }
 
         public Criteria andVideoNoLessThan(String value) {
-            addCriterion("VIDEO_NO <", value, "videoNo");
+            addCriterion("video_no <", value, "videoNo");
             return (Criteria) this;
         }
 
         public Criteria andVideoNoLessThanOrEqualTo(String value) {
-            addCriterion("VIDEO_NO <=", value, "videoNo");
+            addCriterion("video_no <=", value, "videoNo");
             return (Criteria) this;
         }
 
         public Criteria andVideoNoLike(String value) {
-            addCriterion("VIDEO_NO like", value, "videoNo");
+            addCriterion("video_no like", value, "videoNo");
             return (Criteria) this;
         }
 
         public Criteria andVideoNoNotLike(String value) {
-            addCriterion("VIDEO_NO not like", value, "videoNo");
+            addCriterion("video_no not like", value, "videoNo");
             return (Criteria) this;
         }
 
         public Criteria andVideoNoIn(List<String> values) {
-            addCriterion("VIDEO_NO in", values, "videoNo");
+            addCriterion("video_no in", values, "videoNo");
             return (Criteria) this;
         }
 
         public Criteria andVideoNoNotIn(List<String> values) {
-            addCriterion("VIDEO_NO not in", values, "videoNo");
+            addCriterion("video_no not in", values, "videoNo");
             return (Criteria) this;
         }
 
         public Criteria andVideoNoBetween(String value1, String value2) {
-            addCriterion("VIDEO_NO between", value1, value2, "videoNo");
+            addCriterion("video_no between", value1, value2, "videoNo");
             return (Criteria) this;
         }
 
         public Criteria andVideoNoNotBetween(String value1, String value2) {
-            addCriterion("VIDEO_NO not between", value1, value2, "videoNo");
+            addCriterion("video_no not between", value1, value2, "videoNo");
             return (Criteria) this;
         }
 
         public Criteria andVideoTypeIsNull() {
-            addCriterion("VIDEO_TYPE is null");
+            addCriterion("video_type is null");
             return (Criteria) this;
         }
 
         public Criteria andVideoTypeIsNotNull() {
-            addCriterion("VIDEO_TYPE is not null");
+            addCriterion("video_type is not null");
             return (Criteria) this;
         }
 
         public Criteria andVideoTypeEqualTo(String value) {
-            addCriterion("VIDEO_TYPE =", value, "videoType");
+            addCriterion("video_type =", value, "videoType");
             return (Criteria) this;
         }
 
         public Criteria andVideoTypeNotEqualTo(String value) {
-            addCriterion("VIDEO_TYPE <>", value, "videoType");
+            addCriterion("video_type <>", value, "videoType");
             return (Criteria) this;
         }
 
         public Criteria andVideoTypeGreaterThan(String value) {
-            addCriterion("VIDEO_TYPE >", value, "videoType");
+            addCriterion("video_type >", value, "videoType");
             return (Criteria) this;
         }
 
         public Criteria andVideoTypeGreaterThanOrEqualTo(String value) {
-            addCriterion("VIDEO_TYPE >=", value, "videoType");
+            addCriterion("video_type >=", value, "videoType");
             return (Criteria) this;
         }
 
         public Criteria andVideoTypeLessThan(String value) {
-            addCriterion("VIDEO_TYPE <", value, "videoType");
+            addCriterion("video_type <", value, "videoType");
             return (Criteria) this;
         }
 
         public Criteria andVideoTypeLessThanOrEqualTo(String value) {
-            addCriterion("VIDEO_TYPE <=", value, "videoType");
+            addCriterion("video_type <=", value, "videoType");
             return (Criteria) this;
         }
 
         public Criteria andVideoTypeLike(String value) {
-            addCriterion("VIDEO_TYPE like", value, "videoType");
+            addCriterion("video_type like", value, "videoType");
             return (Criteria) this;
         }
 
         public Criteria andVideoTypeNotLike(String value) {
-            addCriterion("VIDEO_TYPE not like", value, "videoType");
+            addCriterion("video_type not like", value, "videoType");
             return (Criteria) this;
         }
 
         public Criteria andVideoTypeIn(List<String> values) {
-            addCriterion("VIDEO_TYPE in", values, "videoType");
+            addCriterion("video_type in", values, "videoType");
             return (Criteria) this;
         }
 
         public Criteria andVideoTypeNotIn(List<String> values) {
-            addCriterion("VIDEO_TYPE not in", values, "videoType");
+            addCriterion("video_type not in", values, "videoType");
             return (Criteria) this;
         }
 
         public Criteria andVideoTypeBetween(String value1, String value2) {
-            addCriterion("VIDEO_TYPE between", value1, value2, "videoType");
+            addCriterion("video_type between", value1, value2, "videoType");
             return (Criteria) this;
         }
 
         public Criteria andVideoTypeNotBetween(String value1, String value2) {
-            addCriterion("VIDEO_TYPE not between", value1, value2, "videoType");
+            addCriterion("video_type not between", value1, value2, "videoType");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeIsNull() {
+            addCriterion("OP_TIME is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeIsNotNull() {
+            addCriterion("OP_TIME is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeEqualTo(Date value) {
+            addCriterion("OP_TIME =", value, "opTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeNotEqualTo(Date value) {
+            addCriterion("OP_TIME <>", value, "opTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeGreaterThan(Date value) {
+            addCriterion("OP_TIME >", value, "opTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("OP_TIME >=", value, "opTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeLessThan(Date value) {
+            addCriterion("OP_TIME <", value, "opTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeLessThanOrEqualTo(Date value) {
+            addCriterion("OP_TIME <=", value, "opTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeIn(List<Date> values) {
+            addCriterion("OP_TIME in", values, "opTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeNotIn(List<Date> values) {
+            addCriterion("OP_TIME not in", values, "opTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeBetween(Date value1, Date value2) {
+            addCriterion("OP_TIME between", value1, value2, "opTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpTimeNotBetween(Date value1, Date value2) {
+            addCriterion("OP_TIME not between", value1, value2, "opTime");
             return (Criteria) this;
         }
     }

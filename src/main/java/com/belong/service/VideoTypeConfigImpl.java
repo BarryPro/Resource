@@ -21,7 +21,7 @@ public class VideoTypeConfigImpl implements IVideoTypeConfig {
     }
 
     @Override
-    public List getVideoNO() {
-        return dao.selectAll();
+    public List getVideoCate() {
+        return dao.selectCate();
     }
 }
