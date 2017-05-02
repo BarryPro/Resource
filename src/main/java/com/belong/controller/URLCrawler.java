@@ -1,5 +1,6 @@
 package com.belong.controller;
 
+import com.belong.service.IVideoRec;
 import com.belong.service.IVideoTypeConfig;
 import com.belong.setting.Config;
 import org.apache.http.HttpEntity;
@@ -25,10 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,7 +41,10 @@ public class URLCrawler {
     private List<String> urls = new ArrayList<>();
 
     @Autowired
-    private IVideoTypeConfig service;
+    private IVideoTypeConfig config_service;
+
+    @Autowired
+    private IVideoRec rec_service;
     //日志工厂
     private static Logger logger = LoggerFactory.getLogger(URLCrawler.class);
 
@@ -59,7 +60,25 @@ public class URLCrawler {
     }
 
     /**
+     * 用于得到远程客户端的ip地址
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/addr")
+    public String getAddr(HttpServletRequest request){
+        String Remote_addr = request.getRemoteAddr();
+        String Local_addr = request.getLocalAddr();
+        // 获取远程客户端的ip
+        String ip = getIpAddress(request);
+        logger.info("Remote_addr:"+Remote_addr);
+        logger.info("Local_addr:"+Local_addr);
+        logger.info("ip:"+ip);
+        return Config.HOME;
+    }
+
+    /**
      * <p>用于给video_type_config插入url数据</p>
+     *
      * @param response
      * @param request
      * @return
@@ -67,24 +86,187 @@ public class URLCrawler {
     @RequestMapping(value = "/type")
     public String getSubUrls(HttpServletResponse response, HttpServletRequest request) {
         URLCrawler crawler = new URLCrawler();
-        String html = crawler.getDecodeHtml();
-        logger.info("type=service:"+service);
-        crawler.getHrefAndType(html,service);
+        getUrls();
+        String html = crawler.getDecodeHtml(urls.get(0));
+        logger.info("type=service:" + config_service);
+        crawler.getHrefAndType(html, config_service);
         return Config.HOME;
     }
 
     /**
      * <p>用于查询所有的可访问的超链然后进行访问</p>
+     *
      * @return
      */
     @RequestMapping(value = "/subUrls")
-    public String cyclicConnUrls(){
+    public String cyclicConnUrls(Map<String, String> map) {
         // 用于装入可访问的链表
-        List<String> list = service.getVideoNO();
-        logger.info("可访问的网址是：["+list.size()+"]"+list);
+        List<String> list = config_service.getVideoCate();
+        logger.info("可访问的网址是：[" + list.size() + "]" + list);
         // 进行访问查询出来的地址
+        getUrls();
+        String context;
+        Document document;
+        //定义计数器
+        int count = 0;
+        for (String url : list) {
+            logger.info("当前访问的url是：[第" + (++count) + "个url]" + url);
+            context = getDecodeHtml(url);
+            //得到dom
+            document = Jsoup.parse(context);
+            Elements lis = document.getElementsByClass("pagination");
+            // 得到最后一个是最后的那个页
+            Element last_a = lis.get(lis.size() - 1);
+            String regex = "<a href=.*-(.*)\\.html\">尾页</a>";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(last_a.html());
+            // 循环子页的次数
+            int n = 0;
+            if (matcher.find()) {
+                String num = matcher.group(1);
+                n = Integer.parseInt(num);
+            }
+            //
+            String video_no;
+            String video_type;
+            logger.info("子链的个数是：" + n);
+            for (int i = 2; i <= n; i++) {
+                video_no = url.substring(0, url.length() - 5) + "-" + i + url.substring(url.length() - 5, url.length());
+                video_type = i + " ";
+                map.put("videoNo", video_no);
+                map.put("videoType", video_type);
+                logger.info("要插入的map：" + map);
+                try {
+                    int code = config_service.addTypeConfig(map);
+                    if (code > 0) {
+                        logger.info("成功插入：" + map);
+                    } else {
+                        logger.info("插入失败！");
+                    }
+                } catch (Exception e) {
+                    logger.error("异常信息是：" + e);
+                    continue;
+                }
+            }
+        }
 
         return Config.HOME;
+    }
+
+    @RequestMapping(value = "/rec")
+    public String getRec(Map map) {
+        // 用于装入可访问的链表
+        List<String> list = config_service.getVideoCate();
+        logger.info("可访问的网址是：[" + list.size() + "]" + list);
+        // 进行访问查询出来的地址
+        getUrls();
+        String html = new URLCrawler().getHtml(this.urls.get(0), Config.DEFAULTCHARSET);
+        String charset = getCharset(html);
+        String context;
+        Document document;
+        //定义计数器
+        int count = 0;
+        for (String url : list) {
+            logger.info("当前访问的url是：[第" + (++count) + "个url]" + url);
+            context = getDecodeHtml(url);
+            //得到dom
+            document = Jsoup.parse(context);
+            Elements uls = document.getElementsByTag("ul");
+            String class_type;
+            for (Element ul : uls) {
+                class_type = ul.attr("class");
+                // 可以确定是具体的url(而不是分类的url)
+                if ("".equals(class_type)) {
+                    Elements as = ul.getElementsByTag("a");
+                    Elements imgs = ul.getElementsByTag("img");
+                    Elements h3s = ul.getElementsByTag("h3");
+                    if (imgs.size() > 0) {
+                        logger.info("as:" + as.size() + "  imgs:" + imgs.size() + "  h3s:" + h3s.size());
+                        // 进行循环取想要的资源
+                        String a, img, h3;
+                        for (int i = 0; i < imgs.size(); i++) {
+                            a = as.get(i).attr("href");
+                            img = imgs.get(i).attr("src");
+                            h3 = h3s.get(i).text();
+                            logger.info("a=" + a + " img=" + img + " h3=" + h3);
+                            a = urls.get(0) + a;
+                            map.put("videoSrc", a);
+                            map.put("videoName", h3);
+                            map.put("videoPic", img);
+                            map.put("videoType", url);
+                            logger.info("要插入的信息是：" + map);
+                            int code = 0;
+                            try {
+                                code = rec_service.addRec(map);
+                            } catch (Exception e) {
+                                continue;
+                            }
+                            if (code > 0) {
+                                logger.info("成功插入：" + map);
+                            } else {
+                                logger.info("插入失败！");
+                            }
+                        }
+                    } else {
+                        // ul有多了，只有有资源的才是有图片的
+                        continue;
+                    }
+                }
+            }
+        }
+        return Config.HOME;
+    }
+
+    private String getIpAddress(HttpServletRequest request) {
+        // 获取请求主机IP地址,如果通过代理进来，则透过防火墙获取真实IP地址  
+
+        String ip = request.getHeader("X-Forwarded-For");
+        if (logger.isInfoEnabled()) {
+            logger.info("getIpAddress(HttpServletRequest) - X-Forwarded-For - String ip=" + ip);
+        }
+
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                ip = request.getHeader("Proxy-Client-IP");
+                if (logger.isInfoEnabled()) {
+                    logger.info("getIpAddress(HttpServletRequest) - Proxy-Client-IP - String ip=" + ip);
+                }
+            }
+            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                ip = request.getHeader("WL-Proxy-Client-IP");
+                if (logger.isInfoEnabled()) {
+                    logger.info("getIpAddress(HttpServletRequest) - WL-Proxy-Client-IP - String ip=" + ip);
+                }
+            }
+            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                ip = request.getHeader("HTTP_CLIENT_IP");
+                if (logger.isInfoEnabled()) {
+                    logger.info("getIpAddress(HttpServletRequest) - HTTP_CLIENT_IP - String ip=" + ip);
+                }
+            }
+            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+                if (logger.isInfoEnabled()) {
+                    logger.info("getIpAddress(HttpServletRequest) - HTTP_X_FORWARDED_FOR - String ip=" + ip);
+                }
+            }
+            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                ip = request.getRemoteAddr();
+                if (logger.isInfoEnabled()) {
+                    logger.info("getIpAddress(HttpServletRequest) - getRemoteAddr - String ip=" + ip);
+                }
+            }
+        } else if (ip.length() > 15) {
+            String[] ips = ip.split(",");
+            for (int index = 0; index < ips.length; index++) {
+                String strIp = ips[index];
+                if (!("unknown".equalsIgnoreCase(strIp))) {
+                    ip = strIp;
+                    break;
+                }
+            }
+        }
+        return ip;
     }
 
     /**
@@ -92,9 +274,8 @@ public class URLCrawler {
      *
      * @return
      */
-    public String getDecodeHtml() {
+    public String getDecodeHtml(String url) {
         getUrls();
-        String url = urls.get(0);
         logger.info("url:" + url);
         String html = new URLCrawler().getHtml(this.urls.get(0), Config.DEFAULTCHARSET);
         String charset = getCharset(html);
@@ -130,17 +311,20 @@ public class URLCrawler {
                 html = EntityUtils.toString(entity, charset);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            // 可以进行一直访问网页，防止中断
+            logger.info("异常信息是：" + e);
+            return getHtml(url,charset);
         }
         return html;
     }
 
     /**
      * 得到html页中的超链和超链所指向的内容
-     * @param html html的全部内容
+     *
+     * @param html    html的全部内容
      * @param service 用于调用服务的句柄
      */
-    private void getHrefAndType(String html,IVideoTypeConfig service) {
+    private void getHrefAndType(String html, IVideoTypeConfig service) {
         logger.info("开始解析html内容");
         Document document = Jsoup.parse(html);
         // 得到多有的超链信息
@@ -150,7 +334,7 @@ public class URLCrawler {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher;
         logger.info("开始插入数据");
-        logger.info("service:"+service);
+        logger.info("service:" + service);
         for (Element element : a) {
             // 得到超链的text内容
             String video_type = element.text();
@@ -161,14 +345,14 @@ public class URLCrawler {
                 video_no = matcher.group(0);
                 Map map = new HashMap<>();
                 // 拼接全名插入
-                video_no = urls.get(0)+video_no;
+                video_no = urls.get(0) + video_no;
                 map.put("videoNo", video_no);
                 map.put("videoType", video_type);
                 logger.info("插入的信息是：" + map);
                 // service 是作为参数传进来的（否则在没有RequestMapping的方法先service不会被实例化）
                 int code = service.addTypeConfig(map);
                 if (code > 0) {
-                    logger.info("成功插入"+map);
+                    logger.info("成功插入" + map);
                 } else {
                     logger.info("插入失败！");
                 }
@@ -212,10 +396,25 @@ public class URLCrawler {
             urls = list;
             logger.info("urls:" + list);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.info("异常信息是：" + e);
         }
         return list;
     }
 
+    public static void main(String[] args) {
+        URLCrawler urlCrawler = new URLCrawler();
+        String html = urlCrawler.getHtml("http://www.99vv1.com",Config.DEFAULTCHARSET);
+        Document document = Jsoup.parse(html);
+        Elements scripts = document.getElementsByTag("script");
+        Elements links = document.getElementsByTag("link");
+        for(Element script:scripts){
+            String js = script.attr("src");
+            System.out.println(js);
+        }
+        //for(Element link:links){
+        //    System.out.println(link);
+        //}
+
+    }
 
 }
