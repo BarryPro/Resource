@@ -261,6 +261,13 @@
             <version>2.8.0</version>
         </dependency>
 
+        <!--JFreeChart 用于制作图表-->
+        <!-- https://mvnrepository.com/artifact/org.jfree/jfreechart -->
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.0.19</version>
+        </dependency>
 
 
     </dependencies>

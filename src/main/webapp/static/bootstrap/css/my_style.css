@@ -1,0 +1,104 @@
+.website{
+    width: inherit;
+    height: inherit;
+}
+.search-table{
+    position: relative;
+    margin: 0 auto;
+    width: 50%;
+    height: inherit;
+}
+.logo-table{
+    width: 20%;
+}
+.login-table{
+    width: 30%;
+    text-align: right;
+}
+.search input{
+    width: 100%;
+    height: 40px;
+    padding-left: 15px;
+    border: 3px solid #439eb8;
+}
+
+.nav-logo{
+    position: absolute;
+    padding-top: 0px;
+    padding-left: 113px;
+    width: 30%;
+}
+
+.search-tr{
+    padding-top: 15px;
+}
+
+/*逗号*/
+.search input,.search button {
+    /*去掉外框*/
+    outline: none;
+    /*透明设置（相对的）*/
+    background: transparent;
+}
+
+.search button {
+    border: none;
+    height: 40px;
+    width: 42px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+}
+
+.search button:before {
+    content: "\f002";
+    font-family: FontAwesome;
+    font-size: 20px;
+    color: #439eb8;
+}
+
+.search input:focus {
+    border-color: #93c763;
+}
+.search_context input{
+    width: 100%;
+    height: 40px;
+    border: 3px solid #439eb8;
+}
+
+.top-area .top-table{
+    width: 100%;
+    background-color: #293134;
+    padding-top: 10px;
+    color: #ffffff;
+}
+.menu-area{
+    width: 18%;
+    background-color: #293134;
+    height: 100%;
+}
+
+.menu-area-div{
+    padding-top: 15px;
+    padding-left: 15px;
+}
+
+.label-div{
+    padding-right: 15px;
+}
+
+.display-area-div{
+    position: absolute;
+    padding-right: 15px;
+}
+.display-area{
+    border: dotted;
+    color: red;
+}
+.other-area{
+
+}
+body{
+    background-color: whitesmoke;
+}
