@@ -26,27 +26,14 @@
         </table>
     </div>
 </nav>
-<div>
-    <table>
-        <tr>
-            <td width="30%">
-                <div class="menu-area-div">
-                    <div class="menu-area">
+<div class="display-area-group">
+    <div class="menu-area">
 
-                    </div>
-                </div>
-            </td>
-            <td width="70%">
-                <div class="display-area-div">
-                    <div class="display-area">
-                        hellodffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-                    </div>
-                </div>
-            </td>
-        </tr>
-    </table>
+    </div>
+    <div class="display-area">
+        hello world
+    </div>
 </div>
-
 
 
 <div class="other-area">

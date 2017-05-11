@@ -74,31 +74,36 @@
     color: #ffffff;
 }
 .menu-area{
-    width: 18%;
+    width: 16%;
     background-color: #293134;
     height: 100%;
+    margin-right: 15px;
 }
 
-.menu-area-div{
-    padding-top: 15px;
-    padding-left: 15px;
-}
 
 .label-div{
     padding-right: 15px;
 }
 
-.display-area-div{
-    position: absolute;
-    padding-right: 15px;
-}
+
 .display-area{
-    border: dotted;
-    color: red;
+    width: 80%;
+    margin-left: 15px;
 }
 .other-area{
+    margin-bottom: 0px;
+    height: 10%;
+    background-color: #293134;
+}
+
+.display-area-group{
+    /*弹性盒子布局*/
+    display: flex;
+    width: 100%;
+    padding: 15px;
 
 }
+
 body{
     background-color: whitesmoke;
 }
