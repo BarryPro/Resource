@@ -31,7 +31,7 @@
 
     </div>
     <div class="display-area">
-        hello world
+        <h1>hello world</h1>
     </div>
 </div>
 

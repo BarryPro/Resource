@@ -26,7 +26,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -384,7 +387,7 @@ public class URLCrawler {
      *
      * @return
      */
-    private List getUrls() {
+    public List getUrls() {
         ArrayList<String> list = new ArrayList<>();
         try {
             InputStream is = URLCrawler.class.getClassLoader().getResourceAsStream(Config.PATH);
