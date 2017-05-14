@@ -13,4 +13,5 @@ public class Config {
     public static final String SUBPATH ="frim/index";
     public static final String HTML = ".html";
     public static final String ERROR ="custom/error.ftl";
+    public static final String POSITION = "txt/position.txt";
 }

@@ -8,7 +8,7 @@ $(function () {
             url: "type",
             type: "post",
             dataType: "text",
-            success:function(data){
+            success: function (data) {
                 $("#msg").empty();
                 console.log("结束获取资源");
             }
@@ -20,10 +20,27 @@ $(function () {
             url: "subUrls",
             type: "post",
             dataType: "text",
-            success:function(data){
+            success: function (data) {
                 $("#msg").empty();
                 console.log("结束获取urls");
             }
         })
-    })
+    });
+
+    // 设置区域
+    setting_fun();
+
+
 });
+
+function setting_fun() {
+    $("#setting-area").hide();
+    $("#setting-btn").click(function () {
+        // 显示div
+        $("#setting-area").show(1000);
+    });
+    $("#setting-area").mouseleave(function(){
+        $("#setting-area").hide(1000);
+    })
+
+}

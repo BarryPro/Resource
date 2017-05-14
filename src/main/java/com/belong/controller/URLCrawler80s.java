@@ -29,12 +29,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.sql.rowset.serial.SerialBlob;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -221,24 +222,42 @@ public class URLCrawler80s {
      */
     @RequestMapping(value = "/videoDetail")
     public String addVideoDetail() {
+        int position = getPosition();
+        logger.info("当前的位置是：" + position);
         list_root = urlCrawler.getUrls();
         List<VideoUrlConfig> list = serviceVideoUrl.getVideo();
         // 含有电影具体信息的网页
         String html = null;
-        int count = 0;
-        for (VideoUrlConfig videoUrlConfig : list) {
-            html = urlCrawler.getDecodeHtml(videoUrlConfig.getVideoHref());
-            Map map = getVideoDetail(html);
-            ++count;
-            logger.info("当前访问第" + count + "条数据");
-            logger.info("要插入的map是：" + map);
-            try {
-                serviceVieoDetailInfo.addVideoDetail(map);
-            } catch (Exception e) {
-                logger.info("错误信息是：" + e.getMessage());
-                continue;
+        for (int i = position;i<list.size();i++) {
+            html = urlCrawler.getDecodeHtml(list.get(i).getVideoHref());
+            if (html != null) {
+                Map map = getVideoDetail(html);
+                Object href = map.get("videoHref");
+                logger.info("当前访问第" + (i+1) + "条数据");
+                setPosition(i+1);
+                if(href == null){
+                    continue;
+                } else if(href.toString().startsWith("http")) {
+
+                    logger.info("要插入的map是：" + map);
+                    try {
+                        int code = serviceVieoDetailInfo.addVideoDetail(map);
+                        if (code > 0) {
+                            logger.info("成功插入："+href);
+                        } else {
+                            logger.error("插入失败");
+                        }
+                    } catch (Exception e) {
+                        logger.info("错误信息是：" + e.getMessage());
+                        continue;
+                    }
+                } else {
+                    logger.info("插入的信息不满足数据类型的规范：["+ href.toString()+"]");
+                    continue;
+                }
             }
         }
+        logger.info("视频全部插入完成！");
         return Config.HOME;
     }
 
@@ -399,7 +418,7 @@ public class URLCrawler80s {
             StatusLine statusLine = response.getStatusLine();
             // 得到请求响应码
             int code = statusLine.getStatusCode();
-            System.out.println("请求返回的状态码是：" + code);
+            logger.info("状态码code：" + code);
             //判断响应状态码
             if (code == HttpStatus.SC_OK) {
                 // 得到网页的实体
@@ -435,6 +454,40 @@ public class URLCrawler80s {
             }
         }
         return EncodeUrl;
+    }
+
+    /**
+     * 得到上次访问的的位置
+     */
+    public int getPosition() {
+        String path = URLCrawler80s.class.getClassLoader().getResource(Config.POSITION).getPath();
+        InputStream is = null;
+        Properties properties = new Properties();
+        Integer pos = 0;
+        try {
+            is = new FileInputStream(path);
+            properties.load(is);
+            pos = Integer.parseInt(properties.get("position").toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return pos;
+    }
+
+    /**
+     * 设置这次访问的位置
+     */
+    public void setPosition(Integer position) {
+        String path = URLCrawler80s.class.getClassLoader().getResource(Config.POSITION).getPath();
+        OutputStream os = null;
+        Properties properties = new Properties();
+        try {
+            os = new FileOutputStream(path);
+            properties.setProperty("position", position.toString());
+            properties.store(os, "pro_pos_file");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -28,6 +28,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,18 +67,19 @@ public class URLCrawler {
 
     /**
      * 用于得到远程客户端的ip地址
+     *
      * @param request
      * @return
      */
     @RequestMapping(value = "/addr")
-    public String getAddr(HttpServletRequest request){
+    public String getAddr(HttpServletRequest request) {
         String Remote_addr = request.getRemoteAddr();
         String Local_addr = request.getLocalAddr();
         // 获取远程客户端的ip
         String ip = getIpAddress(request);
-        logger.info("Remote_addr:"+Remote_addr);
-        logger.info("Local_addr:"+Local_addr);
-        logger.info("ip:"+ip);
+        logger.info("Remote_addr:" + Remote_addr);
+        logger.info("Local_addr:" + Local_addr);
+        logger.info("ip:" + ip);
         return Config.HOME;
     }
 
@@ -284,7 +286,7 @@ public class URLCrawler {
         logger.info("url:" + url);
         String html = new URLCrawler().getHtml(this.urls.get(0), Config.DEFAULTCHARSET);
         String charset = getCharset(html);
-        logger.info("charset:" + charset);
+        //logger.info("charset:" + charset);
         return getHtml(url, charset);
     }
 
@@ -295,6 +297,7 @@ public class URLCrawler {
      * @return
      */
     public String getHtml(String url, String charset) {
+        logger.info("当前请求的地址是：" + url);
         String html = null;
         try {
             // 获取客户端,使用客户端来进行网络请求
@@ -307,7 +310,7 @@ public class URLCrawler {
             StatusLine statusLine = response.getStatusLine();
             // 得到请求响应码
             int code = statusLine.getStatusCode();
-            logger.info("请求返回的状态码是：" + code);
+            logger.info("状态码code：" + code);
             //判断响应状态码
             if (code == HttpStatus.SC_OK) {
                 // 得到网页的实体
@@ -315,15 +318,17 @@ public class URLCrawler {
                 // 转换成字符串
                 html = EntityUtils.toString(entity, charset);
             } else {
-                logger.info("请求失败code是："+code);
+                logger.info("请求失败code是：" + code);
             }
         } catch (ConnectionPoolTimeoutException e) {
             // 可以进行一直访问网页，防止中断
             logger.info("异常信息是：" + e);
-            return getHtml(url,charset);
+            return getHtml(url, charset);
+        } catch (UnknownHostException he) {
+            url = "http://"+url;
         } catch (IOException ioe) {
             logger.info("异常信息是：" + ioe);
-            return getHtml(url,charset);
+            return getHtml(url, charset);
         } catch (Exception ee) {
             logger.info("异常信息是：" + ee);
         }
@@ -380,7 +385,7 @@ public class URLCrawler {
      */
     private String getCharset(String html) {
         // 解析成dom
-        if(html!=null){
+        if (html != null) {
             Document document = Jsoup.parse(html);
             Elements elements = document.getElementsByTag("meta");
             String tmp_attr = elements.get(0).attr("content");
@@ -409,7 +414,7 @@ public class URLCrawler {
                 list.add(buffer.trim());
             }
             urls = list;
-            logger.info("urls:" + list);
+            //logger.info("urls:" + list);
         } catch (Exception e) {
             logger.info("异常信息是：" + e);
         }
@@ -418,18 +423,12 @@ public class URLCrawler {
 
     public static void main(String[] args) {
         URLCrawler urlCrawler = new URLCrawler();
-        String html = urlCrawler.getHtml("http://www.99vv1.com",Config.DEFAULTCHARSET);
+        String html = urlCrawler.getHtml("http://www.99vv1.com", Config.DEFAULTCHARSET);
         Document document = Jsoup.parse(html);
         Elements scripts = document.getElementsByTag("script");
-        Elements links = document.getElementsByTag("link");
-        for(Element script:scripts){
+        for (Element script : scripts) {
             String js = script.attr("src");
             System.out.println(js);
         }
-        //for(Element link:links){
-        //    System.out.println(link);
-        //}
-
     }
-
 }
