@@ -61,6 +61,6 @@
         </javaClientGenerator>
 
         <!-- 数据库中的表要进行反射的Mapping的表 -->
-        <table tableName="classify_detail_config" domainObjectName="ClassifyDetailConfig"/>
+        <table tableName="video_detail_info" domainObjectName="VideoDetailInfo"/>
     </context>
 </generatorConfiguration>

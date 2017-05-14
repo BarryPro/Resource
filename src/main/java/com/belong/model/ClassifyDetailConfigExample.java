@@ -374,6 +374,76 @@ public class ClassifyDetailConfigExample {
             addCriterion("OP_TIME not between", value1, value2, "opTime");
             return (Criteria) this;
         }
+
+        public Criteria andPagerIsNull() {
+            addCriterion("pager is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPagerIsNotNull() {
+            addCriterion("pager is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPagerEqualTo(String value) {
+            addCriterion("pager =", value, "pager");
+            return (Criteria) this;
+        }
+
+        public Criteria andPagerNotEqualTo(String value) {
+            addCriterion("pager <>", value, "pager");
+            return (Criteria) this;
+        }
+
+        public Criteria andPagerGreaterThan(String value) {
+            addCriterion("pager >", value, "pager");
+            return (Criteria) this;
+        }
+
+        public Criteria andPagerGreaterThanOrEqualTo(String value) {
+            addCriterion("pager >=", value, "pager");
+            return (Criteria) this;
+        }
+
+        public Criteria andPagerLessThan(String value) {
+            addCriterion("pager <", value, "pager");
+            return (Criteria) this;
+        }
+
+        public Criteria andPagerLessThanOrEqualTo(String value) {
+            addCriterion("pager <=", value, "pager");
+            return (Criteria) this;
+        }
+
+        public Criteria andPagerLike(String value) {
+            addCriterion("pager like", value, "pager");
+            return (Criteria) this;
+        }
+
+        public Criteria andPagerNotLike(String value) {
+            addCriterion("pager not like", value, "pager");
+            return (Criteria) this;
+        }
+
+        public Criteria andPagerIn(List<String> values) {
+            addCriterion("pager in", values, "pager");
+            return (Criteria) this;
+        }
+
+        public Criteria andPagerNotIn(List<String> values) {
+            addCriterion("pager not in", values, "pager");
+            return (Criteria) this;
+        }
+
+        public Criteria andPagerBetween(String value1, String value2) {
+            addCriterion("pager between", value1, value2, "pager");
+            return (Criteria) this;
+        }
+
+        public Criteria andPagerNotBetween(String value1, String value2) {
+            addCriterion("pager not between", value1, value2, "pager");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

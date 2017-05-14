@@ -9,6 +9,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ConnectionPoolTimeoutException;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -312,11 +314,18 @@ public class URLCrawler {
                 HttpEntity entity = response.getEntity();
                 // 转换成字符串
                 html = EntityUtils.toString(entity, charset);
+            } else {
+                logger.info("请求失败code是："+code);
             }
-        } catch (Exception e) {
+        } catch (ConnectionPoolTimeoutException e) {
             // 可以进行一直访问网页，防止中断
             logger.info("异常信息是：" + e);
             return getHtml(url,charset);
+        } catch (IOException ioe) {
+            logger.info("异常信息是：" + ioe);
+            return getHtml(url,charset);
+        } catch (Exception ee) {
+            logger.info("异常信息是：" + ee);
         }
         return html;
     }
@@ -371,15 +380,18 @@ public class URLCrawler {
      */
     private String getCharset(String html) {
         // 解析成dom
-        Document document = Jsoup.parse(html);
-        Elements elements = document.getElementsByTag("meta");
-        String tmp_attr = elements.get(0).attr("content");
-        String[] attrs = tmp_attr.split("=");
-        if (attrs.length < 2) {
-            return null;
-        } else {
-            return attrs[1];
+        if(html!=null){
+            Document document = Jsoup.parse(html);
+            Elements elements = document.getElementsByTag("meta");
+            String tmp_attr = elements.get(0).attr("content");
+            String[] attrs = tmp_attr.split("=");
+            if (attrs.length < 2) {
+                return null;
+            } else {
+                return attrs[1];
+            }
         }
+        return "";
     }
 
     /**

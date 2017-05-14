@@ -1,5 +1,8 @@
 package com.belong.service;
 
+import com.belong.model.ClassifyDetailConfig;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -9,4 +12,5 @@ import java.util.Map;
  */
 public interface IClassifyDetailConfig {
     int addDetailClassify(Map map);
+    List<ClassifyDetailConfig> getClassifyDetail();
 }

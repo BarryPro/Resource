@@ -34,6 +34,6 @@ public class IpToLocation {
     }
 
     public static void main(String[] args) {
-        getIpToLocation("221.212.59.108");
+        getIpToLocation("139.162.122.59");
     }
 }

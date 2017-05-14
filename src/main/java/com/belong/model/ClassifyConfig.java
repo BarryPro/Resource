@@ -9,6 +9,8 @@ public class ClassifyConfig {
 
     private Date opTime;
 
+    private String pager;
+
     public String getTypeHref() {
         return typeHref;
     }
@@ -31,5 +33,13 @@ public class ClassifyConfig {
 
     public void setOpTime(Date opTime) {
         this.opTime = opTime;
+    }
+
+    public String getPager() {
+        return pager;
+    }
+
+    public void setPager(String pager) {
+        this.pager = pager == null ? null : pager.trim();
     }
 }
