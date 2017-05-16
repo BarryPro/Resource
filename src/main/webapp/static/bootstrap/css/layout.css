@@ -65,7 +65,7 @@
 .menu-area {
     position: fixed;
     width: 16%;
-    height: 50%;
+    height: 90%;
     background-color: #293134;
     margin-right: 15px;
     color: #ffffff;
@@ -73,11 +73,22 @@
     border-radius: 8px;
 }
 .menu-area span{
-    padding: 10px;
+    padding: 15px;
+}
+
+.menu-area ul{
+    /*设置列表的样式为无*/
+    list-style-type: none;
 }
 
 .label-div {
-    padding-right: 15px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.label-div span{
+    padding-right: 10px;
+    padding-left: 10px;
 }
 
 .display-area {
@@ -104,13 +115,52 @@
 }
 
 .setting-area {
-    position: absolute;
+    position: fixed;
     right: 0px;
     background-color: #293134;
     width: 18%;
     padding: 15px;
     color: whitesmoke;
     border-radius: 8px 0px 0px 8px;
+}
+
+.setting-area span{
+    padding: 5px;
+}
+
+.video-window{
+    position: fixed;
+    top: 65px;
+    right: 30%;
+    left: 30%;
+    background-color: #0b0b16;
+    text-align: center;
+}
+
+
+.video-player{
+    width: 640px;
+    height: 360px;
+    border-style: none;
+}
+
+.info-area{
+    position: fixed;
+    width: 30%;
+    height: 90%;
+    right: 0px;
+    top: 65px;
+    background-color: #293134;
+    border-radius: 8px 0 0 8px;
+}
+.chart-area{
+    position: absolute;
+    padding: 5px;
+    background-color: white;
+    width: 275px;
+    height: 200px;
+    bottom: 10px;
+    left: 15px;
 }
 
 body {

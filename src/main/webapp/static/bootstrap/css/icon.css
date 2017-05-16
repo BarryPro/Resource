@@ -87,6 +87,23 @@
     font-family: FontAwesome;
 }
 
+.email-area:after{
+    content: "\f05a";
+    font-family: FontAwesome;
+}
+
+
+.video-window span:before{
+    content: "\f00d";
+    font-family: FontAwesome;
+    position: absolute;
+    top:0;
+    right: 0px;
+    color: white;
+    padding: 10px;
+    font-size: 20px;
+}
+
 .setting-btn:before {
     position: fixed;
     content: "\f013";
@@ -96,4 +113,13 @@
     color: white;
     padding: 5px;
     border-radius: 5px 0px 0px 5px;
+}
+.setting-h5:before{
+    content: "\f013";
+    font-family: FontAwesome;
+}
+
+.theme:before{
+    content: "\f0c9";
+    font-family: FontAwesome;
 }
