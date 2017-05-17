@@ -1,21 +1,10 @@
 package com.belong.controller;
 
+import com.belong.common.Config;
+import com.belong.common.FileConfig;
+import com.belong.common.Net;
 import com.belong.service.IVideoRec;
 import com.belong.service.IVideoTypeConfig;
-import com.belong.setting.Config;
-import com.belong.setting.GETRequest;
-import com.belong.setting.ListURL;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.CookieSpecs;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.ConnectionPoolTimeoutException;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -28,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +33,8 @@ import java.util.regex.Pattern;
 public class URLCrawler {
     //日志工厂
     private static Logger logger = LoggerFactory.getLogger(URLCrawler.class);
+
+    private static String root = FileConfig.getUrls("99vv1");
 
     @Autowired
     private IVideoTypeConfig config_service;
@@ -74,7 +63,7 @@ public class URLCrawler {
         String Remote_addr = request.getRemoteAddr();
         String Local_addr = request.getLocalAddr();
         // 获取远程客户端的ip
-        String ip = getIpAddress(request);
+        String ip = Net.getIpAddress(request);
         logger.info("Remote_addr:" + Remote_addr);
         logger.info("Local_addr:" + Local_addr);
         logger.info("ip:" + ip);
@@ -91,7 +80,7 @@ public class URLCrawler {
     @RequestMapping(value = "/type")
     public String getSubUrls(HttpServletResponse response, HttpServletRequest request) {
         URLCrawler crawler = new URLCrawler();
-        String html = crawler.getDecodeHtml(ListURL.getUrls("99vv1"));
+        String html = crawler.getDecodeHtml(root);
         logger.info("type=service:" + config_service);
         crawler.getHrefAndType(html, config_service);
         return Config.HOME;
@@ -162,8 +151,8 @@ public class URLCrawler {
         List<String> list = config_service.getVideoCate();
         logger.info("可访问的网址是：[" + list.size() + "]" + list);
         // 进行访问查询出来的地址
-        String html = new URLCrawler().GETRequest(ListURL.getUrls("99vv1"), Config.DEFAULTCHARSET);
-        String charset = getCharset(html);
+        String html = Net.getRequest(root, Config.DEFAULTCHARSET);
+        String charset = Net.getCharset(html);
         String context;
         Document document;
         //定义计数器
@@ -191,7 +180,7 @@ public class URLCrawler {
                             img = imgs.get(i).attr("src");
                             h3 = h3s.get(i).text();
                             logger.info("a=" + a + " img=" + img + " h3=" + h3);
-                            a = ListURL.getUrls("99vv1") + a;
+                            a = root + a;
                             map.put("videoSrc", a);
                             map.put("videoName", h3);
                             map.put("videoPic", img);
@@ -219,58 +208,6 @@ public class URLCrawler {
         return Config.HOME;
     }
 
-    private String getIpAddress(HttpServletRequest request) {
-        // 获取请求主机IP地址,如果通过代理进来，则透过防火墙获取真实IP地址  
-
-        String ip = request.getHeader("X-Forwarded-For");
-        if (logger.isInfoEnabled()) {
-            logger.info("getIpAddress(HttpServletRequest) - X-Forwarded-For - String ip=" + ip);
-        }
-
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                ip = request.getHeader("Proxy-Client-IP");
-                if (logger.isInfoEnabled()) {
-                    logger.info("getIpAddress(HttpServletRequest) - Proxy-Client-IP - String ip=" + ip);
-                }
-            }
-            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                ip = request.getHeader("WL-Proxy-Client-IP");
-                if (logger.isInfoEnabled()) {
-                    logger.info("getIpAddress(HttpServletRequest) - WL-Proxy-Client-IP - String ip=" + ip);
-                }
-            }
-            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                ip = request.getHeader("HTTP_CLIENT_IP");
-                if (logger.isInfoEnabled()) {
-                    logger.info("getIpAddress(HttpServletRequest) - HTTP_CLIENT_IP - String ip=" + ip);
-                }
-            }
-            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-                if (logger.isInfoEnabled()) {
-                    logger.info("getIpAddress(HttpServletRequest) - HTTP_X_FORWARDED_FOR - String ip=" + ip);
-                }
-            }
-            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                ip = request.getRemoteAddr();
-                if (logger.isInfoEnabled()) {
-                    logger.info("getIpAddress(HttpServletRequest) - getRemoteAddr - String ip=" + ip);
-                }
-            }
-        } else if (ip.length() > 15) {
-            String[] ips = ip.split(",");
-            for (int index = 0; index < ips.length; index++) {
-                String strIp = ips[index];
-                if (!("unknown".equalsIgnoreCase(strIp))) {
-                    ip = strIp;
-                    break;
-                }
-            }
-        }
-        return ip;
-    }
-
     /**
      * <p>返回解码后的网页信息</p>
      *
@@ -278,56 +215,9 @@ public class URLCrawler {
      */
     public String getDecodeHtml(String url) {
         logger.info("url:" + url);
-        String html = new URLCrawler().GETRequest(ListURL.getUrls("99vv1"), Config.DEFAULTCHARSET);
-        String charset = getCharset(html);
-        return GETRequest(url, charset);
-    }
-
-    /**
-     * <p>用于得到网页的html的内容</p>
-     *
-     * @param url
-     * @return
-     */
-    public String GETRequest(String url, String charset) {
-        logger.info("当前请求的地址是：" + url);
-        String html = null;
-        try {
-            // 获取客户端,使用客户端来进行网络请求
-            HttpClient httpClient = HttpClients.custom()
-                    .setDefaultRequestConfig(RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build())
-                    .build();
-            // 声明请求方法(相当于request的get请求方式)
-            HttpGet httpGet = new HttpGet(url);
-            // 返回请求的响应
-            HttpResponse response = httpClient.execute(httpGet);
-            // 得到响应状态
-            StatusLine statusLine = response.getStatusLine();
-            // 得到请求响应码
-            int code = statusLine.getStatusCode();
-            logger.info("状态码code：" + code);
-            //判断响应状态码
-            if (code == HttpStatus.SC_OK) {
-                // 得到网页的实体
-                HttpEntity entity = response.getEntity();
-                // 转换成字符串
-                html = EntityUtils.toString(entity, charset);
-            } else {
-                logger.info("请求失败code是：" + code);
-            }
-        } catch (ConnectionPoolTimeoutException e) {
-            // 可以进行一直访问网页，防止中断
-            logger.info("异常信息是：" + e);
-            return GETRequest(url, charset);
-        } catch (UnknownHostException he) {
-            url = "http://"+url;
-        } catch (IOException ioe) {
-            logger.info("异常信息是：" + ioe);
-            return GETRequest(url, charset);
-        } catch (Exception ee) {
-            logger.info("异常信息是：" + ee);
-        }
-        return html;
+        String html = Net.getRequest(root, Config.DEFAULTCHARSET);
+        String charset = Net.getCharset(html);
+        return Net.getRequest(url, charset);
     }
 
     /**
@@ -357,7 +247,7 @@ public class URLCrawler {
                 video_no = matcher.group(0);
                 Map map = new HashMap<>();
                 // 拼接全名插入
-                video_no = ListURL.getUrls("99vv1") + video_no;
+                video_no = root + video_no;
                 map.put("videoNo", video_no);
                 map.put("videoType", video_type);
                 logger.info("插入的信息是：" + map);
@@ -373,35 +263,4 @@ public class URLCrawler {
         logger.info("插入数据结束");
     }
 
-    /**
-     * <p>得到网页的翻译的字符集</p>
-     *
-     * @return 返回字符集
-     */
-    private String getCharset(String html) {
-        // 解析成dom
-        if (html != null) {
-            Document document = Jsoup.parse(html);
-            Elements elements = document.getElementsByTag("meta");
-            String tmp_attr = elements.get(0).attr("content");
-            String[] attrs = tmp_attr.split("=");
-            if (attrs.length < 2) {
-                return null;
-            } else {
-                return attrs[1];
-            }
-        }
-        return "";
-    }
-
-    public static void main(String[] args) {
-        URLCrawler urlCrawler = new URLCrawler();
-        String html = GETRequest.getRequest("http://www.99vv1.com", Config.DEFAULTCHARSET);
-        Document document = Jsoup.parse(html);
-        Elements scripts = document.getElementsByTag("script");
-        for (Element script : scripts) {
-            String js = script.attr("src");
-            logger.info(js);
-        }
-    }
 }

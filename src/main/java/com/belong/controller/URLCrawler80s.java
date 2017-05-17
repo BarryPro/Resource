@@ -1,5 +1,8 @@
 package com.belong.controller;
 
+import com.belong.common.Config;
+import com.belong.common.FileConfig;
+import com.belong.common.Net;
 import com.belong.model.ClassifyConfig;
 import com.belong.model.ClassifyDetailConfig;
 import com.belong.model.VideoUrlConfig;
@@ -7,18 +10,6 @@ import com.belong.service.IClassifyConfig;
 import com.belong.service.IClassifyDetailConfig;
 import com.belong.service.IVideoDetailInfo;
 import com.belong.service.IVideoUrlConfig;
-import com.belong.setting.Config;
-import com.belong.setting.ListURL;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -30,13 +21,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.sql.rowset.serial.SerialBlob;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,7 +41,7 @@ public class URLCrawler80s {
     // 日志
     private static Logger logger = LoggerFactory.getLogger(URLCrawler80s.class);
 
-    private static String root = ListURL.getUrls("80s");
+    private static String root = FileConfig.getUrls("80s");
     //调用现有的爬虫程序
     @Autowired
     private URLCrawler urlCrawler;
@@ -219,27 +209,31 @@ public class URLCrawler80s {
      */
     @RequestMapping(value = "/videoDetail")
     public String addVideoDetail() {
-        int position = getPosition();
+        int position = 0;
+        String tmp = FileConfig.getConfig("position");
+        if (tmp != null) {
+            position = Integer.parseInt(tmp);
+        }
         logger.info("当前的位置是：" + position);
         List<VideoUrlConfig> list = serviceVideoUrl.getVideo();
         // 含有电影具体信息的网页
         String html = null;
-        for (int i = position;i<list.size();i++) {
+        for (int i = position; i < list.size(); i++) {
             html = urlCrawler.getDecodeHtml(list.get(i).getVideoHref());
             if (html != null) {
                 Map map = getVideoDetail(html);
                 Object href = map.get("videoHref");
-                logger.info("当前访问第" + (i+1) + "条数据");
-                setPosition(i+1);
-                if(href == null){
+                logger.info("当前访问第" + (i + 1) + "条数据");
+                FileConfig.setConfig("position",(i + 1)+"");
+                if (href == null) {
                     continue;
-                } else if(href.toString().startsWith("http")) {
+                } else if (href.toString().startsWith("http")) {
 
                     logger.info("要插入的map是：" + map);
                     try {
                         int code = serviceVieoDetailInfo.addVideoDetail(map);
                         if (code > 0) {
-                            logger.info("成功插入："+href);
+                            logger.info("成功插入：" + href);
                         } else {
                             logger.error("插入失败");
                         }
@@ -248,7 +242,7 @@ public class URLCrawler80s {
                         continue;
                     }
                 } else {
-                    logger.info("插入的信息不满足数据类型的规范：["+ href.toString()+"]");
+                    logger.info("插入的信息不满足数据类型的规范：[" + href.toString() + "]");
                     continue;
                 }
             }
@@ -293,7 +287,9 @@ public class URLCrawler80s {
             Elements as = spans.getElementsByTag("a");
             if (!as.isEmpty()) {
                 String url = as.get(0).attr("href");
-                String encodeHtml = getHtml(url);
+                HashMap<String,String> param_map = new HashMap<>();
+                param_map.put("url-input",url);
+                String encodeHtml = Net.postRequest(url,param_map);
                 String videoHref = getEncodeUrl(encodeHtml);
                 map.put("videoHref", videoHref);
             }
@@ -382,54 +378,6 @@ public class URLCrawler80s {
         return urls;
     }
 
-    /**
-     * 带参数的访问网页
-     *
-     * @return
-     */
-    public String getHtml(String url_input) {
-        String html = null;
-        try {
-            // 获取客户端,使用客户端来进行网络请求
-            HttpClient httpClient = HttpClients.createDefault();
-            // 声明请求方法(相当于request的get请求方式)
-            HttpPost httpPost = new HttpPost(ListURL.getUrls("parse"));
-            // 解决中文乱码在外面包一层 StringEntity 继承了HttpEntity
-            httpPost.setHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-            httpPost.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36");
-            httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
-
-            // 设置网页请求的参数，包括form-data的提交
-            List<BasicNameValuePair> form_params = new ArrayList<>();
-            form_params.add(new BasicNameValuePair("url-input", url_input));
-            UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(form_params, Config.DEFAULTCHARSET);
-            httpPost.setEntity(urlEncodedFormEntity);
-
-            //httpPost
-            // 返回请求的响应
-            HttpResponse response = httpClient.execute(httpPost);
-            // 得到响应状态
-            StatusLine statusLine = response.getStatusLine();
-            // 得到请求响应码
-            int code = statusLine.getStatusCode();
-            logger.info("状态码code：" + code);
-            //判断响应状态码
-            if (code == HttpStatus.SC_OK) {
-                // 得到网页的实体
-                HttpEntity entity = response.getEntity();
-                // 转换成字符串
-                html = EntityUtils.toString(entity, Config.DEFAULTCHARSET);
-            } else {
-                logger.info("请求失败code是：" + code);
-            }
-            //EntityUtils.consume(multipartEntity);
-        } catch (Exception e) {
-            // 可以进行一直访问网页，防止中断
-            System.out.println("异常信息是：" + e);
-            return getHtml(url_input);
-        }
-        return html;
-    }
 
     /**
      * 用于获取解码后的原始地址的超链
@@ -448,40 +396,6 @@ public class URLCrawler80s {
             }
         }
         return EncodeUrl;
-    }
-
-    /**
-     * 得到上次访问的的位置
-     */
-    public int getPosition() {
-        String path = URLCrawler80s.class.getClassLoader().getResource(Config.POSITION).getPath();
-        InputStream is = null;
-        Properties properties = new Properties();
-        Integer pos = 0;
-        try {
-            is = new FileInputStream(path);
-            properties.load(is);
-            pos = Integer.parseInt(properties.get("position").toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return pos;
-    }
-
-    /**
-     * 设置这次访问的位置
-     */
-    public void setPosition(Integer position) {
-        String path = URLCrawler80s.class.getClassLoader().getResource(Config.POSITION).getPath();
-        OutputStream os = null;
-        Properties properties = new Properties();
-        try {
-            os = new FileOutputStream(path);
-            properties.setProperty("position", position.toString());
-            properties.store(os, "pro_pos_file");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 }
