@@ -3,11 +3,15 @@ package com.belong.controller;
 import com.belong.service.IVideoRec;
 import com.belong.service.IVideoTypeConfig;
 import com.belong.setting.Config;
+import com.belong.setting.GETRequest;
+import com.belong.setting.ListURL;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ConnectionPoolTimeoutException;
 import org.apache.http.impl.client.HttpClients;
@@ -24,12 +28,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,21 +44,19 @@ import java.util.regex.Pattern;
 @Controller
 @RequestMapping(value = "/urlCrawler")
 public class URLCrawler {
-    private List<String> urls = new ArrayList<>();
+    //日志工厂
+    private static Logger logger = LoggerFactory.getLogger(URLCrawler.class);
 
     @Autowired
     private IVideoTypeConfig config_service;
 
     @Autowired
     private IVideoRec rec_service;
-    //日志工厂
-    private static Logger logger = LoggerFactory.getLogger(URLCrawler.class);
 
     @RequestMapping(value = "/home")
     public String home() {
         return Config.HOME;
     }
-
 
     @RequestMapping(value = "/error")
     public String error() {
@@ -93,8 +91,7 @@ public class URLCrawler {
     @RequestMapping(value = "/type")
     public String getSubUrls(HttpServletResponse response, HttpServletRequest request) {
         URLCrawler crawler = new URLCrawler();
-        getUrls();
-        String html = crawler.getDecodeHtml(urls.get(0));
+        String html = crawler.getDecodeHtml(ListURL.getUrls("99vv1"));
         logger.info("type=service:" + config_service);
         crawler.getHrefAndType(html, config_service);
         return Config.HOME;
@@ -111,7 +108,6 @@ public class URLCrawler {
         List<String> list = config_service.getVideoCate();
         logger.info("可访问的网址是：[" + list.size() + "]" + list);
         // 进行访问查询出来的地址
-        getUrls();
         String context;
         Document document;
         //定义计数器
@@ -166,8 +162,7 @@ public class URLCrawler {
         List<String> list = config_service.getVideoCate();
         logger.info("可访问的网址是：[" + list.size() + "]" + list);
         // 进行访问查询出来的地址
-        getUrls();
-        String html = new URLCrawler().getHtml(this.urls.get(0), Config.DEFAULTCHARSET);
+        String html = new URLCrawler().GETRequest(ListURL.getUrls("99vv1"), Config.DEFAULTCHARSET);
         String charset = getCharset(html);
         String context;
         Document document;
@@ -196,7 +191,7 @@ public class URLCrawler {
                             img = imgs.get(i).attr("src");
                             h3 = h3s.get(i).text();
                             logger.info("a=" + a + " img=" + img + " h3=" + h3);
-                            a = urls.get(0) + a;
+                            a = ListURL.getUrls("99vv1") + a;
                             map.put("videoSrc", a);
                             map.put("videoName", h3);
                             map.put("videoPic", img);
@@ -282,12 +277,10 @@ public class URLCrawler {
      * @return
      */
     public String getDecodeHtml(String url) {
-        getUrls();
         logger.info("url:" + url);
-        String html = new URLCrawler().getHtml(this.urls.get(0), Config.DEFAULTCHARSET);
+        String html = new URLCrawler().GETRequest(ListURL.getUrls("99vv1"), Config.DEFAULTCHARSET);
         String charset = getCharset(html);
-        //logger.info("charset:" + charset);
-        return getHtml(url, charset);
+        return GETRequest(url, charset);
     }
 
     /**
@@ -296,12 +289,14 @@ public class URLCrawler {
      * @param url
      * @return
      */
-    public String getHtml(String url, String charset) {
+    public String GETRequest(String url, String charset) {
         logger.info("当前请求的地址是：" + url);
         String html = null;
         try {
             // 获取客户端,使用客户端来进行网络请求
-            HttpClient httpClient = HttpClients.createDefault();
+            HttpClient httpClient = HttpClients.custom()
+                    .setDefaultRequestConfig(RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build())
+                    .build();
             // 声明请求方法(相当于request的get请求方式)
             HttpGet httpGet = new HttpGet(url);
             // 返回请求的响应
@@ -323,12 +318,12 @@ public class URLCrawler {
         } catch (ConnectionPoolTimeoutException e) {
             // 可以进行一直访问网页，防止中断
             logger.info("异常信息是：" + e);
-            return getHtml(url, charset);
+            return GETRequest(url, charset);
         } catch (UnknownHostException he) {
             url = "http://"+url;
         } catch (IOException ioe) {
             logger.info("异常信息是：" + ioe);
-            return getHtml(url, charset);
+            return GETRequest(url, charset);
         } catch (Exception ee) {
             logger.info("异常信息是：" + ee);
         }
@@ -362,7 +357,7 @@ public class URLCrawler {
                 video_no = matcher.group(0);
                 Map map = new HashMap<>();
                 // 拼接全名插入
-                video_no = urls.get(0) + video_no;
+                video_no = ListURL.getUrls("99vv1") + video_no;
                 map.put("videoNo", video_no);
                 map.put("videoType", video_type);
                 logger.info("插入的信息是：" + map);
@@ -399,36 +394,14 @@ public class URLCrawler {
         return "";
     }
 
-    /**
-     * 得到io流中的网址
-     *
-     * @return
-     */
-    public List getUrls() {
-        ArrayList<String> list = new ArrayList<>();
-        try {
-            InputStream is = URLCrawler.class.getClassLoader().getResourceAsStream(Config.PATH);
-            BufferedReader br = new BufferedReader(new InputStreamReader(is, Config.DEFAULTCHARSET));
-            String buffer;
-            while ((buffer = br.readLine()) != null) {
-                list.add(buffer.trim());
-            }
-            urls = list;
-            //logger.info("urls:" + list);
-        } catch (Exception e) {
-            logger.info("异常信息是：" + e);
-        }
-        return list;
-    }
-
     public static void main(String[] args) {
         URLCrawler urlCrawler = new URLCrawler();
-        String html = urlCrawler.getHtml("http://www.99vv1.com", Config.DEFAULTCHARSET);
+        String html = GETRequest.getRequest("http://www.99vv1.com", Config.DEFAULTCHARSET);
         Document document = Jsoup.parse(html);
         Elements scripts = document.getElementsByTag("script");
         for (Element script : scripts) {
             String js = script.attr("src");
-            System.out.println(js);
+            logger.info(js);
         }
     }
 }

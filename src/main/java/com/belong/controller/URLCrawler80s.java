@@ -8,6 +8,7 @@ import com.belong.service.IClassifyDetailConfig;
 import com.belong.service.IVideoDetailInfo;
 import com.belong.service.IVideoUrlConfig;
 import com.belong.setting.Config;
+import com.belong.setting.ListURL;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -50,9 +51,7 @@ public class URLCrawler80s {
     // 日志
     private static Logger logger = LoggerFactory.getLogger(URLCrawler80s.class);
 
-    // 用于全局共享访问地址的连接
-    private List<String> list_root = new ArrayList<>();
-
+    private static String root = ListURL.getUrls("80s");
     //调用现有的爬虫程序
     @Autowired
     private URLCrawler urlCrawler;
@@ -71,10 +70,9 @@ public class URLCrawler80s {
 
     @RequestMapping(value = "/classify")
     public String getClassify() {
-        list_root = urlCrawler.getUrls();
-        logger.info("list_root:" + list_root);
-        logger.info("当前访问的网址是：" + list_root.get(0));
-        String html = urlCrawler.getDecodeHtml(list_root.get(0));
+        logger.info("list_root:" + root);
+        logger.info("当前访问的网址是：" + root);
+        String html = urlCrawler.getDecodeHtml(root);
         Document document = Jsoup.parse(html);
         Element element = document.getElementById("nav");
         Elements elements = element.getElementsByTag("a");
@@ -83,7 +81,7 @@ public class URLCrawler80s {
             String typeName = a.text();
             String typeHref = a.attr("href");
             String pager = "";
-            typeHref = list_root.get(0) + typeHref;
+            typeHref = root + typeHref;
             // 二次分类获取分类的页数
             html = urlCrawler.getDecodeHtml(typeHref);
             pager = getPager(html);
@@ -107,7 +105,6 @@ public class URLCrawler80s {
 
     @RequestMapping(value = "/classifyDetail")
     public String getClassifyDetail(Map map) {
-        list_root = urlCrawler.getUrls();
         // 取得大类
         List<ClassifyConfig> list = serviceClassify.getClassify();
         logger.info("list:" + list);
@@ -120,7 +117,7 @@ public class URLCrawler80s {
                 Elements as = dl.getElementsByTag("a");
                 for (Element a : as) {
                     String typeDtlhref, typeDtlname, type_Name, pager;
-                    typeDtlhref = list_root.get(0) + a.attr("href");
+                    typeDtlhref = root + a.attr("href");
                     typeDtlname = a.text();
                     type_Name = config.getTypeName();
                     // 二次访问来获取详细分类的页数
@@ -224,7 +221,6 @@ public class URLCrawler80s {
     public String addVideoDetail() {
         int position = getPosition();
         logger.info("当前的位置是：" + position);
-        list_root = urlCrawler.getUrls();
         List<VideoUrlConfig> list = serviceVideoUrl.getVideo();
         // 含有电影具体信息的网页
         String html = null;
@@ -312,7 +308,6 @@ public class URLCrawler80s {
      */
     public List<Map<String, String>> addVideo(String html) {
         List<Map<String, String>> list = new ArrayList<>();
-        list_root = urlCrawler.getUrls();
         Document document = Jsoup.parse(html);
         Elements uls = document.getElementsByClass("me1 clearfix");
         if (uls.isEmpty()) {
@@ -330,7 +325,7 @@ public class URLCrawler80s {
             // 组合规范的图片访问URL
             videoImg = "http:" + videoImg;
             String videoHref = as.get(0).attr("href");
-            videoHref = list_root.get(0) + videoHref;
+            videoHref = root + videoHref;
             String[] title = as.get(0).attr("title").toString().split("\\s+");
             // 分割title 分成title 和 rating
             String videoTitle = null;
@@ -393,13 +388,12 @@ public class URLCrawler80s {
      * @return
      */
     public String getHtml(String url_input) {
-        list_root = urlCrawler.getUrls();
         String html = null;
         try {
             // 获取客户端,使用客户端来进行网络请求
             HttpClient httpClient = HttpClients.createDefault();
             // 声明请求方法(相当于request的get请求方式)
-            HttpPost httpPost = new HttpPost(list_root.get(1));
+            HttpPost httpPost = new HttpPost(ListURL.getUrls("parse"));
             // 解决中文乱码在外面包一层 StringEntity 继承了HttpEntity
             httpPost.setHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
             httpPost.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36");
