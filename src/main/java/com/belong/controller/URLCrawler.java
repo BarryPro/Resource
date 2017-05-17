@@ -1,7 +1,6 @@
 package com.belong.controller;
 
 import com.belong.common.Config;
-import com.belong.common.FileConfig;
 import com.belong.common.Net;
 import com.belong.service.IVideoRec;
 import com.belong.service.IVideoTypeConfig;
@@ -34,7 +33,14 @@ public class URLCrawler {
     //日志工厂
     private static Logger logger = LoggerFactory.getLogger(URLCrawler.class);
 
-    private static String root = FileConfig.getUrls("99vv1");
+    private static String root;
+    private static String charset;
+
+    static {
+        Map<String,String> map = Config.init("99vv1");
+        root = map.get("root");
+        charset = map.get("charset");
+    }
 
     @Autowired
     private IVideoTypeConfig config_service;
@@ -151,7 +157,7 @@ public class URLCrawler {
         List<String> list = config_service.getVideoCate();
         logger.info("可访问的网址是：[" + list.size() + "]" + list);
         // 进行访问查询出来的地址
-        String html = Net.getRequest(root, Config.DEFAULTCHARSET);
+        String html = Net.getRequest(root, Config.DEFAULT_CHARSET);
         String charset = Net.getCharset(html);
         String context;
         Document document;
@@ -214,9 +220,6 @@ public class URLCrawler {
      * @return
      */
     public String getDecodeHtml(String url) {
-        logger.info("url:" + url);
-        String html = Net.getRequest(root, Config.DEFAULTCHARSET);
-        String charset = Net.getCharset(html);
         return Net.getRequest(url, charset);
     }
 
