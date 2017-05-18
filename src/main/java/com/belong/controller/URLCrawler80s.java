@@ -251,6 +251,15 @@ public class URLCrawler80s {
         return Config.HOME;
     }
 
+    @RequestMapping(value = "/chart")
+    public String generateChart(){
+        List<ClassifyConfig> list = serviceClassify.chartData();
+        for(ClassifyConfig config:list){
+            logger.info(config.getPager());
+        }
+        return Config.HOME;
+    }
+
     /**
      * 组合要插入的电影详细信息
      *

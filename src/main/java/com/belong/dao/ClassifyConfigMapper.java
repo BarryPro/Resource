@@ -9,4 +9,6 @@ public interface ClassifyConfigMapper {
     List<ClassifyConfig> selectAll();
 
     int addClassify(Map map);
+
+    List<ClassifyConfig> selectClassify();
 }

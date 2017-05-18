@@ -13,4 +13,5 @@ import java.util.Map;
 public interface IClassifyConfig {
     int addClassify(Map map);
     List<ClassifyConfig> getClassify();
+    List<ClassifyConfig> chartData();
 }

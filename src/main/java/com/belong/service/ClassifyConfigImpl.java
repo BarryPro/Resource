@@ -27,4 +27,9 @@ public class ClassifyConfigImpl implements IClassifyConfig {
     public List<ClassifyConfig> getClassify() {
         return daoClassify.selectAll();
     }
+
+    @Override
+    public List<ClassifyConfig> chartData() {
+        return daoClassify.selectClassify();
+    }
 }

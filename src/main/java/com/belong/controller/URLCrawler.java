@@ -15,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,12 +78,10 @@ public class URLCrawler {
     /**
      * <p>用于给video_type_config插入url数据</p>
      *
-     * @param response
-     * @param request
      * @return
      */
     @RequestMapping(value = "/type")
-    public String getSubUrls(HttpServletResponse response, HttpServletRequest request) {
+    public String getSubUrls() {
         URLCrawler crawler = new URLCrawler();
         String html = crawler.getDecodeHtml(root);
         logger.info("type=service:" + config_service);
