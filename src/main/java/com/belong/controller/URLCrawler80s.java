@@ -1,5 +1,6 @@
 package com.belong.controller;
 
+import com.belong.common.Chart;
 import com.belong.common.Config;
 import com.belong.common.FileConfig;
 import com.belong.common.Net;
@@ -224,7 +225,7 @@ public class URLCrawler80s {
                 Map map = getVideoDetail(html);
                 Object href = map.get("videoHref");
                 logger.info("当前访问第" + (i + 1) + "条数据");
-                FileConfig.setConfig("position",(i + 1)+"");
+                FileConfig.setConfig("position", (i + 1) + "");
                 if (href == null) {
                     continue;
                 } else if (href.toString().startsWith("http")) {
@@ -252,11 +253,16 @@ public class URLCrawler80s {
     }
 
     @RequestMapping(value = "/chart")
-    public String generateChart(){
+    public String generateChart() {
         List<ClassifyConfig> list = serviceClassify.chartData();
-        for(ClassifyConfig config:list){
-            logger.info(config.getPager());
+        List<String> pagers = new ArrayList<>();
+        for (ClassifyConfig config : list) {
+            config.setPager(getPagerNum(config.getPager()));
         }
+        Map map = new HashMap();
+        map.put("list",list);
+        logger.debug("map数据是："+list);
+        Chart.generateChart(map);
         return Config.HOME;
     }
 
@@ -296,9 +302,9 @@ public class URLCrawler80s {
             Elements as = spans.getElementsByTag("a");
             if (!as.isEmpty()) {
                 String url = as.get(0).attr("href");
-                HashMap<String,String> param_map = new HashMap<>();
-                param_map.put("url-input",url);
-                String encodeHtml = Net.postRequest(url,param_map);
+                HashMap<String, String> param_map = new HashMap<>();
+                param_map.put("url-input", url);
+                String encodeHtml = Net.postRequest(url, param_map);
                 String videoHref = getEncodeUrl(encodeHtml);
                 map.put("videoHref", videoHref);
             }
@@ -405,6 +411,16 @@ public class URLCrawler80s {
             }
         }
         return EncodeUrl;
+    }
+
+    public String getPagerNum(String pager) {
+        String regex_pager = "(.*p)(\\d*)";
+        Pattern pattern_pager = Pattern.compile(regex_pager);
+        Matcher matcher_pager = pattern_pager.matcher(pager);
+        if (matcher_pager.find()) {
+            pager = matcher_pager.group(2);
+        }
+        return pager;
     }
 
 }
