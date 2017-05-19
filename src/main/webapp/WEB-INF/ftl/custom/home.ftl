@@ -46,7 +46,9 @@
             <li class="fire"><span>热门影片</span></li>
             <li class="map-signs"><span>电影专题</span></li>
         </ul>
-        <div class="chart-area"></div>
+        <div class="chart-area">
+            <img src="../80sHome/chart" alt="图表" class="chart-size" id="chart">
+        </div>
     </div>
     <div class="display-area">
         <p id="txt">
@@ -62,7 +64,7 @@
 
     </div>
     <div class="info-area" id="info-area"></div>
-
+    <div class="display-img" id="display-img"></div>
 
 </div>
 <div class="other-area">

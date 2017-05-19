@@ -17,6 +17,7 @@ public class Config {
     public static final String CHARSET = "charset";
     public static final String ROOT = "root";
     public static final String MESSAGE = "message";
+    public static final String OUT_IMG = "img/out_img.jpg";
 
     /**
      * 负责初始化网站

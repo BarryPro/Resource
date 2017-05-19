@@ -163,6 +163,19 @@
     left: 15px;
 }
 
+.chart-area .chart-size{
+    width: 100%;
+    height: 100%;
+}
+
+.display-img{
+    position: fixed;
+    top: 20%;
+    bottom: 30%;
+    left: 30%;
+    right: 30%;
+}
+
 body {
     background-color: whitesmoke;
 }

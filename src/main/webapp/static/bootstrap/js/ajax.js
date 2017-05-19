@@ -35,7 +35,6 @@ $(function () {
 
 
 
-
 });
 
 function setting_fun() {
@@ -64,6 +63,14 @@ function setting_fun() {
     $("#close-video").click(function(){
         $("#video-window").slideUp(400);
         $("#video-player").trigger("pause")
-    })
+    });
 
+    $("#chart").click(function(){
+        $("#display-img").empty();
+        $("#display-img").append('<img src="../80sHome/chart" alt="图表" id="chart-0">')
+    });
+
+    $("#display-img").mouseleave(function(){
+        $("#chart-0").hide(400)
+    })
 }

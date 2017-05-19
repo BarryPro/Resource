@@ -21,7 +21,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.sql.rowset.serial.SerialBlob;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -253,16 +258,38 @@ public class URLCrawler80s {
     }
 
     @RequestMapping(value = "/chart")
-    public String generateChart() {
+    public String generateChart(HttpServletResponse response) {
         List<ClassifyConfig> list = serviceClassify.chartData();
         List<String> pagers = new ArrayList<>();
         for (ClassifyConfig config : list) {
             config.setPager(getPagerNum(config.getPager()));
         }
         Map map = new HashMap();
-        map.put("list",list);
-        logger.debug("map数据是："+list);
-        Chart.generateChart(map);
+        map.put("list", list);
+        logger.debug("map数据是：" + list);
+        // 得到图片文件
+        File file = Chart.generateChart(map);
+        ServletOutputStream outputStream = null;
+        FileInputStream stream = null;
+        try {
+            outputStream = response.getOutputStream();
+            stream = new FileInputStream(file);
+            byte[] buffer = new byte[1024];
+            int n = 0;
+            while ((n = stream.read(buffer)) != -1){
+                // 知道文件写完为止
+                outputStream.write(buffer,0,n);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                outputStream.close();
+                stream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return Config.HOME;
     }
 
