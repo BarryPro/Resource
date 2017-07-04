@@ -13,4 +13,5 @@ import java.util.Map;
 public interface IVideoUrlConfig {
     int addVideo(Map map);
     List<VideoUrlConfig> getVideo();
+    List<VideoUrlConfig> getVideoPage(Map map);
 }

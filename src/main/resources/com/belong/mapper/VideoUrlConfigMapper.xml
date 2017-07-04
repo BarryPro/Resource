@@ -20,4 +20,19 @@
         select * from video_url_config_view
     </select>
 
+    <select id="getVideoPage" statementType="CALLABLE"
+            parameterType="map"
+            resultMap="BaseResultMap">
+        <![CDATA[
+
+          call pro_paging(
+            #{classify_name , mode=IN ,jdbcType=VARCHAR},
+	        #{current_page ,mode=IN ,jdbcType=INTEGER},
+	        #{total_row , mode=OUT ,jdbcType=INTEGER},
+	        #{total_page ,mode=OUT ,jdbcType=INTEGER}
+          )
+
+        ]]>
+    </select>
+
 </mapper>

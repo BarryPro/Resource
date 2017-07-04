@@ -27,4 +27,9 @@ public class VideoUrlConfigImpl implements IVideoUrlConfig {
     public List<VideoUrlConfig> getVideo() {
         return dao.getVideo();
     }
+
+    @Override
+    public List<VideoUrlConfig> getVideoPage(Map map) {
+        return dao.getVideoPage(map);
+    }
 }

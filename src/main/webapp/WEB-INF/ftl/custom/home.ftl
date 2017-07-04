@@ -31,30 +31,46 @@
 <div class="display-area-group">
     <div class="video-window" id="video-window">
         <span id="close-video"></span>
-        <video controls class="video-player" id="video-player" src="/Resource/static/速度与激情8[预告片]_bd.mp4"></video>
+        <video controls class="video-player" id="video-player" >
+            <source src="" type="video/mp4">
+        </video>
     </div>
-    <div class="menu-area">
+    <div class="menu-area" id="menu-area">
         <ul>
-            <li class="home"><span>首页</span></li>
-            <li class="movie"><span>电影</span></li>
-            <li class="tv"><span>电视剧</span></li>
-            <li class="codiepie"><span>动漫</span></li>
-            <li class="diamond"><span>综艺</span></li>
-            <li class="music"><span>音乐mv</span></li>
-            <li class="video"><span>视频短片</span></li>
-            <li class="caret-"><span>公开课</span></li>
-            <li class="fire"><span>热门影片</span></li>
-            <li class="map-signs"><span>电影专题</span></li>
+            <li class="home"><span id="home">首页</span></li>
+            <li class="movie"><span id="movie">电影</span></li>
+            <li class="tv"><span id="ju">电视剧</span></li>
+            <li class="codiepie"><span id="dm">动漫</span></li>
+            <li class="diamond"><span id="zy">综艺</span></li>
+            <li class="music"><span id="mv">音乐mv</span></li>
+            <li class="video"><span id="video">视频短片</span></li>
+            <li class="caret-"><span id="course">公开课</span></li>
+            <li class="fire"><span id="hot">热门影片</span></li>
+            <li class="map-signs"><span id="zhuanti">电影专题</span></li>
         </ul>
         <div class="chart-area">
             <img src="../80sHome/chart" alt="图表" class="chart-size" id="chart">
         </div>
     </div>
     <div class="display-area">
-        <p id="txt">
-
-        </p>
-
+        <div class="display-setting">
+            <div class="video-view">
+                <table>
+                    <tr>
+                        <td><a href="http://www.80s.tw/movie/14976"><img src="http://t.dyxz.la/upload/img/201506/14976_b.jpg!list"/></a></td>
+                    </tr>
+                    <tr class="span-title"><td><span>belong放到和更符合规范</span></td></tr>
+                    <tr><td>评分</td></tr>
+                </table>
+            </div>
+        </div>
+        <div class="display-page">
+            <a>上一页</a>
+            <a>1</a>
+            <a>2</a>
+            <a>3</a>
+            <a>下一页</a>
+        </div>
     </div>
     <div class="setting-area" id="setting-area">
         <h5 class="theme"><span>主题</span></h5>
@@ -65,7 +81,6 @@
     </div>
     <div class="info-area" id="info-area"></div>
     <div class="display-img" id="display-img"></div>
-
 </div>
 <div class="other-area">
     ＨＥＬＬＯＷＯＲＬＤ

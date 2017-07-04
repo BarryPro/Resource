@@ -73,12 +73,17 @@
     border-radius: 8px;
 }
 .menu-area span{
-    padding: 15px;
+    padding-left: 15px;
+    cursor: pointer;
 }
 
 .menu-area ul{
-    /*设置列表的样式为无*/
-    list-style-type: none;
+     /*设置列表的样式为无*/
+     list-style-type: none;
+}
+
+.menu-area ul li{
+    padding-bottom: 15px;
 }
 
 .label-div {
@@ -93,6 +98,9 @@
 
 .display-area {
     margin-left: 18%;
+    display: flex;
+    width: 1500px;
+    height: 80%;
 }
 
 .other-area {
@@ -176,6 +184,37 @@
     right: 30%;
 }
 
+.video-view{
+    text-align: center;
+    margin: 6px;
+    height: 230px;
+    width: 130px;
+}
+
+.span-title span{
+    text-align: center;
+    word-break: break-all;
+    word-wrap:break-word
+}
+
+.img-size{
+    width: 117px;
+}
+
+.display-setting{
+    display: flex;
+    /* 设置自动换行*/
+    flex-wrap: wrap;
+    width: 95%;
+    margin-left: 50px;
+}
+
+.display-page{
+    position: absolute;
+    margin: 10px;
+    bottom: 20px;
+    left: 50%;
+}
 body {
     background-color: whitesmoke;
 }

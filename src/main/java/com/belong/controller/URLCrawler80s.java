@@ -1,11 +1,13 @@
 package com.belong.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.belong.common.Chart;
 import com.belong.common.Config;
 import com.belong.common.FileConfig;
 import com.belong.common.Net;
 import com.belong.model.ClassifyConfig;
 import com.belong.model.ClassifyDetailConfig;
+import com.belong.model.PageBean;
 import com.belong.model.VideoUrlConfig;
 import com.belong.service.IClassifyConfig;
 import com.belong.service.IClassifyDetailConfig;
@@ -20,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +30,7 @@ import javax.sql.rowset.serial.SerialBlob;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -280,6 +284,7 @@ public class URLCrawler80s {
                 // 知道文件写完为止
                 outputStream.write(buffer,0,n);
             }
+            outputStream.flush();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -289,6 +294,33 @@ public class URLCrawler80s {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/page")
+    public String getVideoPage(
+            @RequestParam(value = "id") String span_id,
+            Map map ,HttpServletResponse response){
+        map.put("classify_name",span_id);
+        logger.info("span_id:"+span_id);
+        map.put("current_page",1);
+        List<VideoUrlConfig> list = serviceVideoUrl.getVideoPage(map);
+        PageBean pageBean = new PageBean();
+        pageBean.setData(list);
+        pageBean.setTotal_row((Integer) map.get("total_row"));
+        pageBean.setTotal_page((Integer) map.get("total_page"));
+        String json = JSON.toJSONString(pageBean);
+        logger.info("查询出来的分页电影是："+json);
+        logger.info("查询出来的map的数据是："+map);
+        try {
+            response.setCharacterEncoding(Config.DEFAULT_CHARSET);
+            PrintWriter writer = response.getWriter();
+            writer.write(json);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return Config.HOME;
     }
